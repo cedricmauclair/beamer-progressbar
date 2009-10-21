@@ -187,8 +187,10 @@
       \ifx\insertsubtitle\@empty\\[\baselineskip]
       \else{\\\usebeamerfont{subtitle}\usebeamercolor{subtitle}{\color{fg}\insertsubtitle}}\\[\baselineskip]\fi
       \hrule\vskip\baselineskip
-      {\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\
-      {\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\
+      \ifx\insertauthor\@empty\ \\
+      \else{\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\\fi
+      \ifx\insertdate\@empty\ \\
+      \else{\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\\fi
       \ifx\insertinstitute\@empty 
       \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\\fi
       \insertlogo
