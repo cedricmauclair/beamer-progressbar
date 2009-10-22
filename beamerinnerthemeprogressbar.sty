@@ -94,7 +94,7 @@
 
 \defbeamertemplate*{block begin}{progressbar theme}
 {
-  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor{block title}\emph{\insertblocktitle}}\\[-0.3cm]% JustTo be "babel-safe"
+  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor{block title}\emph{\insertblocktitle}}\\[-0.3cm]% JustTo be "babel-safe"
     \twoptoff{}\tikz\draw[black!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\fi\usebeamerfont{block body}
 }
 \defbeamertemplate*{block end}{progressbar theme}
@@ -135,8 +135,7 @@
 
 \defbeamertemplate*{block alerted begin}{progressbar theme}
 {
-  \setbox\progressbar@blockbox=\hbox to
-  0.95\textwidth\bgroup\vbox\bgroup\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title alerted}\color{alerted text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
+  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title alerted}\color{alerted text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
     \usebeamercolor{block body alerted}
     \tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\usebeamerfont{block body alerted}\usebeamercolor{block body}
 }
@@ -152,8 +151,7 @@
 
 \defbeamertemplate*{block example begin}{progressbar theme}
 {
-  \setbox\progressbar@blockbox=\hbox to
-  0.95\textwidth\bgroup\vbox\bgroup\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title example}\color{example text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
+  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title example}\color{example text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
     \usebeamercolor{block body example}
     \tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\usebeamerfont{block body example}\usebeamercolor{block body}
 }
@@ -177,13 +175,12 @@
 
 \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
 \defbeamertemplate*{frametitle}{progressbar theme}{
-\edef\tempa{picture-section}
+\edef\tempa{normal}
 \ifx\progressbar@frametitle\tempa
-\parbox[c]{0.13\textwidth}{\pgfuseimage{headlineimage}}
-\parbox[c]{0.85\textwidth}{
-  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
-  \textbf{\vphantom{Hp}\insertframetitle}
-}
+\begin{centering}
+  \textbf{\insertframetitle}
+  \par
+\end{centering}
 \else
 \edef\tempa{picture-subsection}
 \ifx\progressbar@frametitle\tempa
@@ -193,10 +190,11 @@
   \textbf{\vphantom{Hp}\insertframetitle}
 }
 \else
-\begin{centering}
-  \textbf{\insertframetitle}
-  \par
-\end{centering}
+\parbox[c]{0.13\textwidth}{\pgfuseimage{headlineimage}}
+\parbox[c]{0.85\textwidth}{
+  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
+  \textbf{\vphantom{Hp}\insertframetitle}
+}
 \fi
 \fi
 }
