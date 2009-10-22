@@ -33,6 +33,7 @@
 
 \def\progressbaroptions#1{\setkeys{progressbar}{#1}}
 
+\def\insertintermediateframenumber{\inserttotalframenumber}
 
 \usecolortheme{progressbar}
 \useinnertheme{progressbar}
@@ -46,4 +47,29 @@
   \typeout{You are using the progressbar beamer theme (Sylvain B.)}
   \typeout{Version: 0.4. Aug. 2009.}
   \typeout{..................................................................}
+}
+
+\renewcommand{\appendix}[1][0void0]
+{
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  % This piece of code is supposed to introduce a bias in the
+  % number of slides
+  \makeatletter
+  \immediate\write\@auxout{\string\@writefile{nav}%
+    {\noexpand\headcommand{\noexpand\def\noexpand\insertintermediateframenumber{\the\c@framenumber}}}}
+  \renewcommand{\insertintermediateframenumber}{\inserttotalframenumber}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  
+  \def\tmparg{#1}
+  \def\tmpargref{0void0}
+  \ifx\tmparg\tmpargref\else
+  \begin{frame}[plain]
+    \vfill
+    \begin{center}
+      \usebeamerfont{title}\usebeamercolor{title}{\color{fg}\ #1\ }
+    \end{center}
+    \vfill
+  \end{frame}
+  \fi
+  \makeatother
 }

@@ -57,10 +57,10 @@
 \advance\progressbar@leftbar by -\progressbar@barlength mm
 
 \def\insertprogressbar{
-  \ifnum\inserttotalframenumber=1\else
+  \ifnum\insertintermediateframenumber=1\else
     \progressbar@numer=\insertframenumber
     \advance\progressbar@numer by -1
-    \progressbar@denom=\inserttotalframenumber
+    \progressbar@denom=\insertintermediateframenumber
     \advance\progressbar@denom by -1
     \progressbar@tmpresult=\progressbar@barlength
     \multiply\progressbar@tmpresult by \progressbar@numer
@@ -68,7 +68,7 @@
     \progressbar@currentbarlength=\progressbar@tmpresult mm
 
     \progressbar@numer=1
-    \progressbar@denom=\inserttotalframenumber
+    \progressbar@denom=\insertintermediateframenumber
     \advance\progressbar@denom by -1
     \progressbar@tmpresult=\progressbar@barlength
     \multiply\progressbar@tmpresult by \progressbar@numer
@@ -77,7 +77,7 @@
 
     \begin{tikzpicture}[thin]
       \useasboundingbox (0, 0) rectangle  (\paperwidth, 0.6cm);
-      \draw (\progressbar@framenumberrectangle, 0.21cm) node [anchor=mid west] {\color{structure.bg!90!structure.fg}\insertframenumber~/~\inserttotalframenumber};
+      \draw (\progressbar@framenumberrectangle, 0.21cm) node [anchor=mid west] {\color{structure.bg!90!structure.fg}\insertframenumber~/~\insertintermediateframenumber};
       \draw (\progressbar@titlerectangle, 0.21cm) node [anchor=south east] {\color{structure.bg!90!structure.fg}\insertshorttitle};
       \draw[structure.bg!30!structure.fg, <->, >=serif cm] (\progressbar@leftbar, 0.21cm) -- (\progressbar@titlerectangle, 0.21cm);
       \draw (\progressbar@currentbarlength, 0.21cm)
