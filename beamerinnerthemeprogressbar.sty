@@ -87,83 +87,112 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
+%%
+%% A factorized code for blocks (strictly equivalent to the following
+%% commented one, but cleaner)... By Cédric Mauclair (Onera)
+%%
+
 \newbox\progressbar@blockbox
 \newlength\progressbar@blockboxwidth
 \newlength\progressbar@blockboxheight
-\tikzfading[name=fade out, inner color=transparent!0, outer color=transparent!100]
 
-\defbeamertemplate*{block begin}{progressbar theme}
-{
-  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor{block title}\emph{\insertblocktitle}}\\[-0.3cm]% JustTo be "babel-safe"
-    \twoptoff{}\tikz\draw[black!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\fi\usebeamerfont{block body}
-}
-\defbeamertemplate*{block end}{progressbar theme}
-{
-  \end{minipage}\egroup\egroup
-%   \progressbar@blockboxwidth=\wd\progressbar@blockbox
-%   \progressbar@blockboxheight=\ht\progressbar@blockbox
-%   \advance\progressbar@blockboxwidth by 0.4cm
-%   \advance\progressbar@blockboxheight by 0.4cm
+\newcommand{\defblock}[1][]{
+  \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi begin}{%
+    \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block title\ifx#1\@empty\else\space#1\fi}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
+      \usebeamercolor{block title\ifx#1\@empty\else\space#1\fi} \tikz\draw[fg!50!bg] (0,0) -- (\textwidth,0);\twopton{}\fi\usebeamerfont{block body\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block body\ifx#1\@empty\else\space#1\fi} } \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi end}{%
+    \end{minipage}\egroup\egroup%
+    \usebeamercolor{block title\ifx#1\@empty\else\space#1\fi}
+    \begin{center}\begin{tikzpicture} \draw node[draw=fg!50!bg,fill=bg,rounded corners=2pt] {\box\progressbar@blockbox};
+      \end{tikzpicture} \end{center} } }
 
-  \usebeamercolor{block body}
-  \begin{center}
-    \begin{tikzpicture}
-    \draw (0, 0) node[draw=fg!20!bg,fill=bg, rounded corners=2pt] (box) {\box\progressbar@blockbox};
-    %% 
-    %% The following code is dedicated to the outside shading of the
-    %% blocks (but doesn't work yet, unfortunately)
-    %%
-    % \draw[use as bounding box] (box.south west) rectangle (box.north east);
+\defblock
+\defblock[example]
+\defblock[alerted]
 
-    % \begin{scope}[even odd rule]
-    %   \clip[rounded corners=2pt] (box.north west) rectangle (box.south east) (-10, -10) rectangle (10, 10) ;
+%%
+%% A factorized code for blocks (strictly equivalent to the following
+%% commented one, but cleaner)... By Cédric Mauclair (Onera)
+%%
 
-    %   \fill [color=black!30!transparent, path fading=west] (box.north west) +(-0.1, 0) rectangle (box.south west);
-    %   \fill [color=black!30!transparent, path fading=north] (box.north west) +(0, 0.1) rectangle (box.north east);
-    %   \fill [color=black!30!transparent, path fading=east] (box.north east) +(0.1, 0) rectangle (box.south east);
-    %   \fill [color=black!30!transparent, path fading=south] (box.south east) +(0, -0.1) rectangle (box.south west);
-      
-    %   \fill [color=black!30!transparent, path fading=fade out] (box.north west) +(-0.1, 0.1) rectangle +(0.1, -0.1);
-    %   \fill [color=black!30!transparent, path fading=fade out] (box.north east) +(0.1, 0.1) rectangle +(-0.1, -0.1);
-    %   \fill [color=black!30!transparent, path fading=fade out] (box.south east) +(0.1, -0.1) rectangle +(-0.1, 0.1);
-    %   \fill [color=black!30!transparent, path fading=fade out] (box.south west) +(-0.1, -0.1) rectangle +(0.1, 0.1);
-    % \end{scope}
-    
-  \end{tikzpicture}
-\end{center}
-}
-
-\defbeamertemplate*{block alerted begin}{progressbar theme}
-{
-  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title alerted}\color{alerted text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
-    \usebeamercolor{block body alerted}
-    \tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\usebeamerfont{block body alerted}\usebeamercolor{block body}
-}
-\defbeamertemplate*{block alerted end}{progressbar theme}
-{
-  \end{minipage}\egroup\egroup
-  \usebeamercolor{block body alerted}
-  \begin{center}\begin{tikzpicture}
-    \draw node[draw=fg!20!bg,fill=bg, rounded corners=2pt] {\box\progressbar@blockbox};
-  \end{tikzpicture}
-\end{center}
-}
-
-\defbeamertemplate*{block example begin}{progressbar theme}
-{
-  \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title example}\color{example text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
-    \usebeamercolor{block body example}
-    \tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\usebeamerfont{block body example}\usebeamercolor{block body}
-}
-\defbeamertemplate*{block example end}{progressbar theme}
-{
-  \end{minipage}\egroup\egroup
-  \usebeamercolor{block body example}
-  \begin{center}\begin{tikzpicture}
-    \draw node[draw=fg!20!bg,fill=bg, rounded corners=2pt] {\box\progressbar@blockbox};
-  \end{tikzpicture}
-\end{center}
-}
+%%%  \newbox\progressbar@blockbox
+%%%  \newlength\progressbar@blockboxwidth
+%%%  \newlength\progressbar@blockboxheight
+%%%  \tikzfading[name=fade out, inner color=transparent!0, outer color=transparent!100]
+%%%  
+%%%  \defbeamertemplate*{block begin}{progressbar theme}
+%%%  {
+%%%    \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor{block title}\emph{\insertblocktitle}}\\[-0.3cm]% JustTo be "babel-safe"
+%%%      \twoptoff{}\tikz\draw[black!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\fi\usebeamerfont{block body}
+%%%  }
+%%%  \defbeamertemplate*{block end}{progressbar theme}
+%%%  {
+%%%    \end{minipage}\egroup\egroup
+%%%  %   \progressbar@blockboxwidth=\wd\progressbar@blockbox
+%%%  %   \progressbar@blockboxheight=\ht\progressbar@blockbox
+%%%  %   \advance\progressbar@blockboxwidth by 0.4cm
+%%%  %   \advance\progressbar@blockboxheight by 0.4cm
+%%%  
+%%%    \usebeamercolor{block body}
+%%%    \begin{center}
+%%%      \begin{tikzpicture}
+%%%      \draw (0, 0) node[draw=fg!20!bg,fill=bg, rounded corners=2pt] (box) {\box\progressbar@blockbox};
+%%%      %% 
+%%%      %% The following code is dedicated to the outside shading of the
+%%%      %% blocks (but doesn't work yet, unfortunately)
+%%%      %%
+%%%      % \draw[use as bounding box] (box.south west) rectangle (box.north east);
+%%%  
+%%%      % \begin{scope}[even odd rule]
+%%%      %   \clip[rounded corners=2pt] (box.north west) rectangle (box.south east) (-10, -10) rectangle (10, 10) ;
+%%%  
+%%%      %   \fill [color=black!30!transparent, path fading=west] (box.north west) +(-0.1, 0) rectangle (box.south west);
+%%%      %   \fill [color=black!30!transparent, path fading=north] (box.north west) +(0, 0.1) rectangle (box.north east);
+%%%      %   \fill [color=black!30!transparent, path fading=east] (box.north east) +(0.1, 0) rectangle (box.south east);
+%%%      %   \fill [color=black!30!transparent, path fading=south] (box.south east) +(0, -0.1) rectangle (box.south west);
+%%%        
+%%%      %   \fill [color=black!30!transparent, path fading=fade out] (box.north west) +(-0.1, 0.1) rectangle +(0.1, -0.1);
+%%%      %   \fill [color=black!30!transparent, path fading=fade out] (box.north east) +(0.1, 0.1) rectangle +(-0.1, -0.1);
+%%%      %   \fill [color=black!30!transparent, path fading=fade out] (box.south east) +(0.1, -0.1) rectangle +(-0.1, 0.1);
+%%%      %   \fill [color=black!30!transparent, path fading=fade out] (box.south west) +(-0.1, -0.1) rectangle +(0.1, 0.1);
+%%%      % \end{scope}
+%%%      
+%%%    \end{tikzpicture}
+%%%  \end{center}
+%%%  }
+%%%  
+%%%  \defbeamertemplate*{block alerted begin}{progressbar theme}
+%%%  {
+%%%    \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title alerted}\color{alerted text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
+%%%      \usebeamercolor{block body alerted}
+%%%      \tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\usebeamerfont{block body alerted}\usebeamercolor{block body}
+%%%  }
+%%%  \defbeamertemplate*{block alerted end}{progressbar theme}
+%%%  {
+%%%    \end{minipage}\egroup\egroup
+%%%    \usebeamercolor{block body alerted}
+%%%    \begin{center}\begin{tikzpicture}
+%%%      \draw node[draw=fg!20!bg,fill=bg, rounded corners=2pt] {\box\progressbar@blockbox};
+%%%    \end{tikzpicture}
+%%%  \end{center}
+%%%  }
+%%%  
+%%%  \defbeamertemplate*{block example begin}{progressbar theme}
+%%%  {
+%%%    \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth}{\usebeamerfont{block title example}\color{example text.fg}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
+%%%      \usebeamercolor{block body example}
+%%%      \tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\usebeamerfont{block body example}\usebeamercolor{block body}
+%%%  }
+%%%  \defbeamertemplate*{block example end}{progressbar theme}
+%%%  {
+%%%    \end{minipage}\egroup\egroup
+%%%    \usebeamercolor{block body example}
+%%%    \begin{center}\begin{tikzpicture}
+%%%      \draw node[draw=fg!20!bg,fill=bg, rounded corners=2pt] {\box\progressbar@blockbox};
+%%%    \end{tikzpicture}
+%%%  \end{center}
+%%%  }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
