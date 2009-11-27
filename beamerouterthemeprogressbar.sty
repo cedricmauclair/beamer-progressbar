@@ -211,7 +211,8 @@
     {\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\[\baselineskip]
     \ifx\insertinstitute\@empty 
     \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\[\baselineskip]\fi
-    \insertlogo
+    \ifx\insertlogo\@empty 
+    \else{\insertlogo}\\[\baselineskip]\fi
     {\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}
     \pgfuseshading{separationtitlepagelineshading}
     \vfill
