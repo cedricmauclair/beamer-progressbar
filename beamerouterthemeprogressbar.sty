@@ -207,13 +207,13 @@
     \else{\usebeamerfont{subtitle}\usebeamercolor{subtitle}{\color{fg}\insertsubtitle}}\\[\baselineskip]\fi
 
     \pgfuseshading{separationtitlepagelineshading}
-    \vskip\baselineskip
-    {\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\[\baselineskip]
+    \ifx\insertauthor\@empty\ \\
+    \else{\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\\fi
+    \ifx\insertdate\@empty\ \\
+    \else{\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\\fi
     \ifx\insertinstitute\@empty 
-    \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\[\baselineskip]\fi
-    \ifx\insertlogo\@empty 
-    \else{\insertlogo}\\[\baselineskip]\fi
-    {\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}
+    \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\\fi
+    \insertlogo
     \pgfuseshading{separationtitlepagelineshading}
     \vfill
   \end{center}
