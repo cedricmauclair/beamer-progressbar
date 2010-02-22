@@ -201,7 +201,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\def\progressbar@separator{--}
 \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
 \defbeamertemplate*{frametitle}{progressbar theme}{
 \edef\tempa{normal}
@@ -215,7 +215,7 @@
 \ifx\progressbar@frametitle\tempa
 \parbox[c]{0.13\textwidth}{\pgfuseimage{headlineimage}}
 \parbox[c]{0.85\textwidth}{
-  \usebeamercolor{frametitle}{\scriptsize \insertsection\ifx\insertsubsection\@empty\else\ \progressbar@separator \insertsubsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
+  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi\ifx\insertsubsection\@empty\else\ \progressbar@separator\ \insertsubsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
   \textbf{\vphantom{Hp}\insertframetitle}
 }
 \else
