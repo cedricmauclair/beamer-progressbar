@@ -101,7 +101,7 @@
 \newcommand{\defblock}[1][]{
   \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi begin}{%
     \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block title\ifx#1\@empty\else\space#1\fi}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
-      \usebeamercolor{block title\ifx#1\@empty\else\space#1\fi} \tikz\draw[fg!50!bg] (0,0) -- (\textwidth,0);\twopton{}\fi\usebeamerfont{block body\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block body\ifx#1\@empty\else\space#1\fi} } \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi end}{%
+      \usebeamercolor{block title\ifx#1\@empty\else\space#1\fi} \tikz\draw[fg!50!bg] (0,0) -- (\textwidth,0);\twopton{}\\\fi\usebeamerfont{block body\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block body\ifx#1\@empty\else\space#1\fi} } \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi end}{%
     \end{minipage}\egroup\egroup%
     \usebeamercolor{block title\ifx#1\@empty\else\space#1\fi}
     \begin{center}\begin{tikzpicture} \draw node[draw=fg!50!bg,fill=bg,rounded corners=2pt] {\box\progressbar@blockbox};
