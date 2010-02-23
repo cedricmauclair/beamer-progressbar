@@ -202,7 +202,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\progressbar@separator{--}
+
+\ifx\progressbar@imagename\@relax
+\else
 \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
+\fi
+\ifx\progressbar@frametitle\@relax
+\def\progressbar@frametitle{normal}
+\fi
+
 \defbeamertemplate*{frametitle}{progressbar theme}{
 \edef\tempa{normal}
 \ifx\progressbar@frametitle\tempa
