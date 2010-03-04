@@ -288,7 +288,9 @@
 
 \mode<handout>
 \setbeamertemplate{frametitle}{
-  \insertframetitle
+  \setbeamercolor{frametitle}{fg=progressbar@fgblue,bg=white}
+  \usebeamercolor{frametitle}
+  {\color{fg}\bf \insertframetitle}
 }
 
 \mode
