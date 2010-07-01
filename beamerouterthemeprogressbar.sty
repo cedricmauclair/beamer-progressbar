@@ -2,7 +2,7 @@
 
 
 % Beamer theme by Sylvain Bouveret <sylvain[dot]bouveret[aT]cert[DoT]fr>
-% aug. 2009 version 0.4
+% jun. 2010 version 0.41
 %
 % based on the LaTeX-Beamer package :
 % Copyright 2003 by Till Tantau <tantau@users.sourceforge.net>
@@ -14,6 +14,36 @@
 \usetikzlibrary{arrows}
 
 \makeatletter
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Processing options...
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\progressbar@headline{none}%
+\def\progressbar@frametitle{picture-section}%
+\def\progressbar@imagename{images/tree04}%
+\def\progressbar@titlepage{picture}%
+\define@key{progressbar}{headline}[none]{%
+  \def\progressbar@headline{#1}%
+}
+\define@key{progressbar}{frametitle}[picture]{%
+  \def\progressbar@frametitle{#1}%
+}
+\define@key{progressbar}{imagename}{%
+  \def\progressbar@imagename{#1}%
+  \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
+}
+\define@key{progressbar}{titlepage}[picture]{%
+  \def\progressbar@titlepage{#1}%
+}
+
+\def\progressbaroptions#1{\setkeys{progressbar}{#1}}
+
+\def\insertintermediateframenumber{\inserttotalframenumber}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,12 +106,13 @@
     \progressbar@stepbar=\progressbar@tmpresult mm
 
     \begin{tikzpicture}[thin]
+      \usebeamercolor{section in head/foot}
       \useasboundingbox (0, 0) rectangle  (\paperwidth, 0.6cm);
-      \draw (\progressbar@framenumberrectangle, 0.21cm) node [anchor=mid west] {\color{structure.bg!90!structure.fg}\insertframenumber~/~\insertintermediateframenumber};
-      \draw (\progressbar@titlerectangle, 0.21cm) node [anchor=south east] {\color{structure.bg!90!structure.fg}\insertshorttitle};
-      \draw[structure.bg!30!structure.fg, <->, >=serif cm] (\progressbar@leftbar, 0.21cm) -- (\progressbar@titlerectangle, 0.21cm);
+      \draw (\progressbar@framenumberrectangle, 0.21cm) node [anchor=mid west] {\color{fg}\insertframenumber~/~\insertintermediateframenumber};
+      \draw (\progressbar@titlerectangle, 0.21cm) node [anchor=south east] {\color{fg}\insertshorttitle};
+      \draw[fg!30!bg, <->, >=serif cm] (\progressbar@leftbar, 0.21cm) -- (\progressbar@titlerectangle, 0.21cm);
       \draw (\progressbar@currentbarlength, 0.21cm)
-      ++(\progressbar@leftbar, 0cm) node[anchor=north] {\color{structure.bg!30!structure.fg}$\blacktriangle$};
+      ++(\progressbar@leftbar, 0cm) node[anchor=north] {\color{fg!30!bg}$\blacktriangle$};
     \end{tikzpicture}
     \fi
 }
@@ -109,9 +140,10 @@
     \progressbar@sectionboxheight=\ht\progressbar@sectionbox
     \advance\progressbar@sectionboxheight by 4pt
     \begin{tikzpicture}
+      \usebeamercolor{section in head/foot}
       \useasboundingbox (-0.5\progressbar@sectionboxwidth, 0pt) rectangle (0.5\progressbar@sectionboxwidth, \progressbar@sectionboxheight);
-      \draw[anchor=base] (0pt, 2pt) node {\color{structure.fg!80!structure.bg} \insertsectionhead};
-      \draw[rounded corners=3pt, draw=structure.fg!80!structure.bg] (-0.5\progressbar@sectionboxwidth, 0pt) rectangle (0.5\progressbar@sectionboxwidth, \progressbar@sectionboxheight);
+      \draw[anchor=base] (0pt, 2pt) node {\color{fg} \insertsectionhead};
+      \draw[rounded corners=3pt, draw=fg] (-0.5\progressbar@sectionboxwidth, 0pt) rectangle (0.5\progressbar@sectionboxwidth, \progressbar@sectionboxheight);
     \end{tikzpicture}
   }
   {\hfill
@@ -122,8 +154,9 @@
     \progressbar@sectionboxheight=\ht\progressbar@sectionboxbox
     \advance\progressbar@sectionboxheight by 4pt
     \begin{tikzpicture}
+      \usebeamercolor{section in head/foot}
       \useasboundingbox (-0.5\progressbar@sectionboxwidth, 0pt) rectangle (0.5\progressbar@sectionboxwidth, \progressbar@sectionboxheight);
-      \draw[anchor=base] (0pt, 2pt) node {\color{structure.fg!50!structure.bg} \insertsectionhead};
+      \draw[anchor=base] (0pt, 2pt) node {\color{fg} \insertsectionhead};
     \end{tikzpicture}
   }
 
@@ -256,8 +289,9 @@
 
 \AtBeginDocument{%
   {
-    \usebeamercolor{background canvas}
-    \pgfdeclareverticalshading{background shading}{\the\paperwidth}{color(0cm)=(fg); color(3cm)=(bg); color(0.6\paperheight)=(bg); color(0.9\paperheight)=(fg); color(\paperheight)=(black!60!fg)
+    \usebeamercolor{section in head/foot}
+    \usebeamercolor{normal text}
+    \pgfdeclareverticalshading{background shading}{\the\paperwidth}{color(0cm)=(section in head/foot.bg); color(3cm)=(bg); color(0.6\paperheight)=(bg); color(0.9\paperheight)=(section in head/foot.bg); color(\paperheight)=(black!60!section in head/foot.bg)
     }
   }
 }

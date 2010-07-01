@@ -1,7 +1,7 @@
 \ProvidesPackage{beamerthemeprogressbar}[2007/06/21]
 
 % Beamer theme by Sylvain Bouveret <sylvain[dot]bouveret[aT]cert[DoT]fr>
-% aug. 2009 version 0.4
+% jun. 2010 version 0.41
 %
 % based on the LaTeX-Beamer package :
 % Copyright 2003 by Till Tantau <tantau@users.sourceforge.net>
@@ -12,28 +12,6 @@
 \RequirePackage{tikz}
 \RequirePackage{bibunits}
 
-\makeatletter
-\def\progressbar@headline{none}%
-\def\progressbar@frametitle{picture-section}%
-\def\progressbar@imagename{images/tree04}%
-\def\progressbar@titlepage{picture}%
-\define@key{progressbar}{headline}[none]{%
-  \def\progressbar@headline{#1}%
-}
-\define@key{progressbar}{frametitle}[picture]{%
-  \def\progressbar@frametitle{#1}%
-}
-\define@key{progressbar}{imagename}{%
-  \def\progressbar@imagename{#1}%
-  \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
-}
-\define@key{progressbar}{titlepage}[picture]{%
-  \def\progressbar@titlepage{#1}%
-}
-
-\def\progressbaroptions#1{\setkeys{progressbar}{#1}}
-
-\def\insertintermediateframenumber{\inserttotalframenumber}
 
 \usecolortheme{progressbar}
 \useinnertheme{progressbar}
@@ -45,7 +23,7 @@
 \AtBeginDocument{%
   \typeout{..................................................................}
   \typeout{You are using the progressbar beamer theme (Sylvain B.)}
-  \typeout{Version: 0.4. Aug. 2009.}
+  \typeout{Version: 0.41 June 2010.}
   \typeout{..................................................................}
 }
 

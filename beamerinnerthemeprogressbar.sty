@@ -2,7 +2,7 @@
 
 
 % Beamer theme by Sylvain Bouveret <sylvain[dot]bouveret[aT]cert[DoT]fr>
-% aug. 2009 version 0.4
+% jun. 2010 version 0.41
 %
 % based on the LaTeX-Beamer package :
 % Copyright 2003 by Till Tantau <tantau@users.sourceforge.net>
@@ -13,6 +13,38 @@
 \RequirePackage{tikz}
 \usetikzlibrary{fadings}
 \RequirePackage{ifthen}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Processing options...
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def\progressbar@headline{none}%
+\def\progressbar@frametitle{picture-section}%
+\def\progressbar@imagename{images/tree04}%
+\def\progressbar@titlepage{picture}%
+\define@key{progressbar}{headline}[none]{%
+  \def\progressbar@headline{#1}%
+}
+\define@key{progressbar}{frametitle}[picture]{%
+  \def\progressbar@frametitle{#1}%
+}
+\define@key{progressbar}{imagename}{%
+  \def\progressbar@imagename{#1}%
+  \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
+}
+\define@key{progressbar}{titlepage}[picture]{%
+  \def\progressbar@titlepage{#1}%
+}
+
+\def\progressbaroptions#1{\setkeys{progressbar}{#1}}
+
+\def\insertintermediateframenumber{\inserttotalframenumber}
+
 
 % This piece of code is just to make the code Babel-compliant with every
 % language.
@@ -98,8 +130,13 @@
 \newlength\progressbar@blockboxwidth
 \newlength\progressbar@blockboxheight
 
+\def\myunskip{\vskip0.1cm}
+\let\progressbar@origcramped=\beamer@cramped
+
 \newcommand{\defblock}[1][]{
   \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi begin}{%
+    \global\let\beamer@firstlineitemizeunskip=\myunskip%
+    \def\beamer@cramped{\itemsep0cm\topsep0cm\vskip-0.6cm\relax}%
     \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block title\ifx#1\@empty\else\space#1\fi}\insertblocktitle}\\[-0.3cm]\twoptoff{}% JustTo be "babel-safe"
       \usebeamercolor{block title\ifx#1\@empty\else\space#1\fi} \tikz\draw[fg!50!bg] (0,0) -- (\textwidth,0);\twopton{}\\\fi\usebeamerfont{block body\ifx#1\@empty\else\space#1\fi}\usebeamercolor[fg]{block body\ifx#1\@empty\else\space#1\fi} } \setbeamertemplate{block \ifx#1\@empty\else#1\space\fi end}{%
     \end{minipage}\egroup\egroup%
@@ -245,9 +282,13 @@
 
 %\setbeamertemplate{items}[circle]
 %\setbeamertemplate{itemize item}{\begin{tikzpicture}\draw[draw=progressbar@bgblue!60!white,fill=progressbar@bgblue!40!white] (0, 0) circle (0.07);\end{tikzpicture}}
-\setbeamertemplate{itemize item}{\begin{tikzpicture}\shade[ball color=structure.fg!80!structure.bg] (0, 0) circle (0.07);\draw[draw=structure.fg!50!black!90!bg] (0, 0) circle (0.07);\end{tikzpicture}}
-\setbeamertemplate{itemize subitem}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.05);\draw[draw=structure.fg!50!black!90!bg] (0, 0) circle (0.05);\end{tikzpicture}}
-\setbeamertemplate{itemize subsubitem}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.05);\draw[draw=structure.fg!50!black!90!bg] (0, 0) circle (0.05);\end{tikzpicture}}
+\setbeamertemplate{itemize item}{
+  \renewcommand{\beamer@cramped}{\progressbar@origcramped}%
+  \global\let\beamer@firstlineitemizeunskip=\relax%
+  \begin{tikzpicture}\shade[ball color=fg!80!bg] (0, 0) circle (0.07);\draw[draw=fg!50!black!90!bg] (0, 0) circle (0.07);\end{tikzpicture}%
+}
+\setbeamertemplate{itemize subitem}{\begin{tikzpicture}\shade[ball color=fg!80!white] (0, 0) circle (0.05);\draw[draw=fg!50!black!90!bg] (0, 0) circle (0.05);\end{tikzpicture}}
+\setbeamertemplate{itemize subsubitem}{\begin{tikzpicture}\shade[ball color=fg!80!white] (0, 0) circle (0.05);\draw[draw=fg!50!black!90!bg] (0, 0) circle (0.05);\end{tikzpicture}}
 
 % \setbeamertemplate{enumerate item}{\raisebox{-0.4ex}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.07);\draw  (0, 0) node [draw=structure.fg!50!black!90!bg, inner sep=1pt] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
 % \setbeamertemplate{enumerate subitem}{\raisebox{-0.4ex}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.07);\draw  (0, 0) node [draw=structure.fg!50!black!90!bg, inner sep=1pt] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
