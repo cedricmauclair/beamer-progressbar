@@ -292,8 +292,8 @@
 
 % \setbeamertemplate{enumerate item}{\raisebox{-0.4ex}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.07);\draw  (0, 0) node [draw=structure.fg!50!black!90!bg, inner sep=1pt] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
 % \setbeamertemplate{enumerate subitem}{\raisebox{-0.4ex}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.07);\draw  (0, 0) node [draw=structure.fg!50!black!90!bg, inner sep=1pt] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
-\setbeamertemplate{enumerate item}{\raisebox{-0.4ex}{\begin{tikzpicture}\node [draw=structure.fg!50!black!90!bg, inner sep=1pt, shading=ball, circle, ball color=structure.fg!80!white] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
-\setbeamertemplate{enumerate subitem}{\raisebox{-0.4ex}{\begin{tikzpicture}\node [draw=structure.fg!50!black!90!bg, inner sep=1pt, shading=ball,circle, ball color=structure.fg!80!white] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
+\setbeamertemplate{enumerate item}{\raisebox{-0.4ex}{\begin{tikzpicture}\node [draw=fg!50!black!90!bg, inner sep=1pt, shading=ball, circle, ball color=fg!80!white] {\tiny\color{bg}\bf\insertenumlabel};\end{tikzpicture}}}
+\setbeamertemplate{enumerate subitem}{\raisebox{-0.4ex}{\begin{tikzpicture}\node [draw=fg!50!black!90!bg, inner sep=1pt, shading=ball,circle, ball color=fg!80!white] {\tiny\color{bg}\bf\insertenumlabel};\end{tikzpicture}}}
 
 \normalsize
 \pgfdeclareradialshading[bg,parent.bg]{tocsphere}{\pgfpoint{-0.5ex}{0.6ex}}%
@@ -323,7 +323,7 @@
 
 \setbeamertemplate{section in toc}
 {\leavevmode%
-  \raisebox{-0.5ex}{\begin{tikzpicture}\node [draw=structure.fg!50!black!90!bg, inner sep=1.5pt, shading=ball, circle, ball color=structure.fg!80!white] {\scriptsize\color{white}\bf\inserttocsectionnumber};\end{tikzpicture}}
+  \raisebox{-0.5ex}{\begin{tikzpicture}\node [draw=fg!50!black!90!bg, inner sep=1.5pt, shading=ball, circle, ball color=fg!80!white] {\scriptsize\color{bg}\bf\inserttocsectionnumber};\end{tikzpicture}}
   \inserttocsection\par
 }
 
