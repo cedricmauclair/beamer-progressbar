@@ -1,7 +1,7 @@
 \ProvidesPackage{beamerthemeprogressbar}[2007/06/21]
 
 % Beamer theme by Sylvain Bouveret <sylvain[dot]bouveret[aT]cert[DoT]fr>
-% jun. 2010 version 0.41
+% sep. 2010 version 0.42
 %
 % based on the LaTeX-Beamer package :
 % Copyright 2003 by Till Tantau <tantau@users.sourceforge.net>
@@ -23,9 +23,11 @@
 \AtBeginDocument{%
   \typeout{..................................................................}
   \typeout{You are using the progressbar beamer theme (Sylvain B.)}
-  \typeout{Version: 0.41 June 2010.}
+  \typeout{Version: 0.42 September 2010.}
   \typeout{..................................................................}
 }
+
+\def\insertintermediateframenumber{\inserttotalframenumber}
 
 \renewcommand{\appendix}[1][0void0]
 {
@@ -49,5 +51,19 @@
     \vfill
   \end{frame}
   \fi
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  % We recompute the progressbar step and the current position
+
+  \progressbar@numer=1
+  \progressbar@denom=\insertintermediateframenumber
+  \advance\progressbar@denom by -1
+  \progressbar@tmpresult=\progressbar@barlength
+  \multiply\progressbar@tmpresult by \progressbar@numer
+  \divide\progressbar@tmpresult by \progressbar@denom
+  \global\progressbar@stepbar=\progressbar@tmpresult
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
   \makeatother
 }
