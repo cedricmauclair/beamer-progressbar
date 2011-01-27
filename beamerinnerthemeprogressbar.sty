@@ -167,7 +167,7 @@
 }
 \defbeamertemplate*{block end}{progressbar theme}
 {
-  \global\let\itemize=\progressbar@tempitemize\end{minipage}\egroup\egroup
+  \global\let\itemize=\progressbar@tempitemize\beamer@endpause\end{minipage}\egroup\egroup
   \usebeamercolor{block body}
   {\centering
     \begin{tikzpicture}
@@ -183,7 +183,7 @@
 }
 \defbeamertemplate*{block alerted end}{progressbar theme}
 {
-  \global\let\itemize=\progressbar@tempitemize\end{minipage}\egroup\egroup
+  \global\let\itemize=\progressbar@tempitemize\beamer@endpause\end{minipage}\egroup\egroup
   \usebeamercolor{block body alerted}
   {\centering
   \begin{tikzpicture}
@@ -199,7 +199,7 @@
 }
 \defbeamertemplate*{block example end}{progressbar theme}
 {
-  \global\let\itemize=\progressbar@tempitemize\end{minipage}\egroup\egroup
+  \global\let\itemize=\progressbar@tempitemize\beamer@endpause\end{minipage}\egroup\egroup
   \usebeamercolor{block body example}
   {\centering
     \begin{tikzpicture}
