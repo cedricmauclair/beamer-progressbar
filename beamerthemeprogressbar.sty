@@ -60,7 +60,7 @@
   \advance\progressbar@denom by -1
   \progressbar@tmpresult=\progressbar@barlength
   \multiply\progressbar@tmpresult by \progressbar@numer
-  \divide\progressbar@tmpresult by \progressbar@denom
+  \ifnum\progressbar@denom=0\else\divide\progressbar@tmpresult by \progressbar@denom\fi
   \global\progressbar@stepbar=\progressbar@tmpresult
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
