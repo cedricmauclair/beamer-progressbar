@@ -1,0 +1,141 @@
+\documentclass[utf8, a4paper]{beamer}
+
+\usepackage[english] {babel}
+\usepackage[T1]      {fontenc}
+
+\usepackage{amsmath, amsfonts, cfr-lm, graphicx}
+\renewcommand*\rmdefault\sfdefault
+
+\usepackage{tikz}
+
+\usetheme{progressbar}
+
+\setbeamersize
+  {text margin left=1em, text margin right=1em}
+
+% \setbeamertemplate{itemize item}
+%   {\unitsquare[fill, scale=4, yshift=.3]}
+% \setbeamertemplate{itemize subitem}
+%   {\unittriangle[fill, scale=4, yshift=.3]}
+% \setbeamertemplate{itemize subsubitem}
+%   {\unittriangle[draw, scale=3, yshift=.5]}
+
+\title
+  [Short Title\hspace{2em}]
+  {Full Title of the Presentation}
+
+\author
+  [Bruce Wayne]
+  {Bruce Wayne\quad Clark Kent\\Peter Parker\quad Alan Scot}
+
+\date
+  {April 01, 2011}
+
+\institute
+  {Justice League of America}
+
+\begin{document}
+
+\maketitle
+
+
+\section
+  {Introduction}
+
+\begin{frame}
+  {Introduction}
+
+  Things in a Bulleted List\pause
+
+  \begin{itemize}
+  \item Bullets that\pause
+  \item Come up\pause
+  \item One by one
+  \end{itemize}
+\end{frame}
+
+
+\section
+  {Main Body}
+
+\begin{frame}
+  {Equations}
+
+  Equations are easy
+  \begin{itemize}
+  \item Just copy/paste equations\pause
+  \item From the paper!
+    \begin{equation*}
+      \textbf{p}^* = \underset{\textbf{p}}{\arg\!\min}~\sum_{\textbf{x}}\left[ I(\textbf{W}(\textbf{x};\textbf{p})) - T(\textbf{x}) \right]^2
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  {Pictures}
+
+  \begin{figure}[t]
+    \centering
+    \includegraphics[height=\dimexpr11\textheight/16\relax]{ducks}
+    \caption{Kissing ducks}
+  \end{figure}
+\end{frame}
+
+
+\begin{frame}
+  {A Movie}
+
+  \begin{block}
+    {Some block}
+
+    \begin{itemize}
+    \item Movies only seem to work in Adobe Reader
+    \item Movie file is not embedded, it must be on the computer
+    \end{itemize}
+  \end{block}
+
+  \pause
+  \begin{alertblock}
+    {Some more block}
+
+    Movies only seem to work in Adobe Reader\par
+    Movie file is not embedded, it must be on the computer
+  \end{alertblock}
+  \pause
+
+  \begin{exampleblock}{}
+    Some text in here.
+
+    \begin{itemize}[<+->]
+    \item Movies only seem to work in Adobe Reader
+    \item Movie file is not embedded, it must be on the computer
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+
+\section
+  {Conclusion}
+
+\begin{frame}
+  {Credits}
+
+  \begin{itemize}
+  \item Brought to you by Cédric Mauclair
+  \item Please let me know about improvements!
+  \item Inspiration: \url{http://www.shawnlankton.com}... (in code)
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  {Questions}
+
+  \nocite{lorem,ipsum}
+  \bibliographystyle{plain}
+  \bibliography{demo}
+
+\end{frame}
+
+\end{document}

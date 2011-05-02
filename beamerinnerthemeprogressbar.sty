@@ -75,6 +75,24 @@
 \end{center}
 }
 
+%<< STARTS HERE >>
+
+\definecolor{bibstruct}{rgb}{0.95,0.95,0.85}
+\setbeamercolor{bibliography structure}{fg=normal text.fg, bg=bibstruct}
+
+% no new macro to learn for the user
+\let\bibliographyorig\bibliography
+\def\bibliography#1{%
+  \begin{center}
+    \begin{tikzpicture}
+      \usebeamercolor{bibliography structure}
+      \node [draw=fg!20!bg, fill=bg, rounded corners=2pt]
+        {\parbox{0.95\textwidth}{\bibliographyorig{#1}\vskip2mm}};
+    \end{tikzpicture}
+  \end{center}}
+
+%>> ENDS HERE
+
 \defbeamertemplate*{bibliography item}{progressbar theme}{
   \begin{tikzpicture}[rounded corners=1pt]
     \useasboundingbox (-0.1, 0.3) rectangle (0.4, 0.5);
@@ -123,42 +141,126 @@
 \newdimen\progressbar@boxheight
 \newdimen\progressbar@boxwidth
 
+%<< STARTS HERE >>
+
+% useless now
 % The ultimate trick to prevent the itemize-inside-blocks bug from happening...
-\let\progressbar@tempitemize=\itemize
-\def\progressbar@itemize{\ifhmode\else\vskip-0.85\topsep\fi\progressbar@tempitemize}
-% 
+% \let\progressbar@tempitemize=\itemize
+% \def\progressbar@itemize{\ifhmode\else\vskip-0.85\topsep\fi\progressbar@tempitemize}
+
+\newcommand\defblocktemplate[2][]{%
+  \if @#2@
+    \edef\doit{\noexpand\defsetblock[\noexpand#1]
+      {block begin} {block end}
+      {block title} {block body}}
+  \else
+    \edef\doit{\noexpand\defsetblock[\noexpand#1]
+      {block #2 begin} {block #2 end}
+      {block title #2} {block body #2}}
+  \fi
+  \def\defsetbeamertemplate{\defbeamertemplate*}%
+  \doit}
+
+\newcommand\setblocktemplate[2][]{%
+  \if @#2@
+    \edef\doit{\noexpand\defsetblock[\noexpand#1]
+      {block begin} {block end}
+      {block title} {block body}}
+  \else
+    \edef\doit{\noexpand\defsetblock[\noexpand#1]
+      {block #2 begin} {block #2 end}
+      {block title #2} {block body #2}}
+  \fi
+  \def\defsetbeamertemplate##1##2{\setbeamertemplate{##1}}%
+  \doit}
+
+\newcommand\defsetblock[5][]{%
+  % block begin
+  \defsetbeamertemplate{#2}{progressbar}{%
+    % fix spurious spaces around itemize (kinda hackish)
+    \addtobeamertemplate{itemize/enumerate body begin}
+      {\kern-0.85\topsep}{}
+    \addtobeamertemplate{itemize/enumerate body end}
+      {}{\kern-\dimexpr0.85\topsep+0.25\topskip\relax}% seems ok
+    % put content into boxes
+    \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup
+      \vbox\bgroup
+        \raggedright
+        \begin{minipage}{0.95\textwidth}
+          % deal with optional title
+          \ifx\insertblocktitle\@empty
+          \else
+            {\usebeamerfont{#4}\usebeamercolor[fg]{#4}\insertblocktitle}\\[-0.3cm]
+            % NOTE TO MYSELF: better use this syntax with babel
+            \begin{tikzpicture}
+              \draw[draw=fg!20!bg, #1] (0,0) -- ++(\textwidth,0);
+            \end{tikzpicture}% avoid spurious space
+          \fi
+          \usebeamerfont{#5}\usebeamercolor[fg]{#5}% avoid spurious space
+  }
+  % ----------------------------------------
+  % block end
+  \defsetbeamertemplate{#3}{progressbar}{%
+        \end{minipage}% avoid spurious space
+      \egroup% end vbox
+    \egroup% end hbox
+    % use boxes to typeset content
+    \progressbar@boxwidth\wd\progressbar@blockbox
+    \progressbar@boxheight\ht\progressbar@blockbox
+    \advance\progressbar@boxheight\dp\progressbar@blockbox
+    \usebeamercolor{#5}% avoid spurious space
+    \hbox to\textwidth{%
+      \hfill
+      \begin{tikzpicture}
+        \node[draw=fg!20!bg, fill=bg, rounded corners=2pt, #1]
+          at (0.5\progressbar@boxwidth,0.5\progressbar@boxheight)
+          {\box\progressbar@blockbox};
+      \end{tikzpicture}% avoid spurious space
+      \hfill}\vskip0.25\baselineskip}% put some space after block
+}
+
+% #1 optional argument can be used to tweak default definition
+% should probably be treated as key/val with (x)keyval or (even better) pgfkeys
+\defblocktemplate{}% default block has no name
+\defblocktemplate{alerted}
+\defblocktemplate{example}
+
+% \defblocktemplate uses \defbeamertemplate* (one time only)
+% \setblocktemplate uses \setbeamertemplate
+
+%>> ENDS HERE
 
 %%% Bruno's factorized version begins %%%
 
-\newcommand{\defblock}[1][]{
-  \defbeamertemplate*{block \ifx#1\@empty\else#1\space\fi begin}{progressbar theme}
-  {
-    \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\vskip-0.25\baselineskip\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor[fg]{block title\ifx#1\@empty\else\space#1\fi}\insertblocktitle}\\[-0.3cm]% Just to be "babel-safe"
-      \twoptoff{}\tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\fi\usebeamerfont{block body\ifx#1\@empty\else\space#1\fi}\ifx\insertblocktitle\@empty\else\global\let\itemize=\progressbar@itemize\fi \par
-  }
-  \defbeamertemplate*{block \ifx#1\@empty\else#1\space\fi end}{progressbar theme}
-  {
-    \vphantom{y}
-    \global\let\itemize=\progressbar@tempitemize\end{minipage}\vskip-0.25\baselineskip\egroup\egroup
-    \progressbar@boxwidth=\wd\progressbar@blockbox
-    \advance\progressbar@boxwidth by 0.5\baselineskip
-    \progressbar@boxheight=\ht\progressbar@blockbox
-    \advance\progressbar@boxheight by \dp\progressbar@blockbox
-    {\parbox[t]{0cm}{
-      \usebeamercolor{block body\ifx#1\@empty\else\space#1\fi}
-      \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
-    }}
-  {\parbox[t]{0cm}{
-      \vskip0.5\baselineskip
-      \ \hfill{\box\progressbar@blockbox}\hfill\ 
-    }}\par
-    \vskip-1\baselineskip
-  }
-}
+% \newcommand{\defblock}[1][]{
+%   \defbeamertemplate*{block \ifx#1\@empty\else#1\space\fi begin}{progressbar theme}
+%   {
+%     \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\vskip-0.25\baselineskip\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor[fg]{block title\ifx#1\@empty\else\space#1\fi}\insertblocktitle}\\[-0.3cm]% Just to be "babel-safe"
+%       \twoptoff{}\tikz\draw[fg!20!bg] (0, 0) -- (\textwidth, 0);\twopton{}\fi\usebeamerfont{block body\ifx#1\@empty\else\space#1\fi}\ifx\insertblocktitle\@empty\else\global\let\itemize=\progressbar@itemize\fi \par
+%   }
+%   \defbeamertemplate*{block \ifx#1\@empty\else#1\space\fi end}{progressbar theme}
+%   {
+%     \vphantom{y}
+%     \global\let\itemize=\progressbar@tempitemize\end{minipage}\vskip-0.25\baselineskip\egroup\egroup
+%     \progressbar@boxwidth=\wd\progressbar@blockbox
+%     \advance\progressbar@boxwidth by 0.5\baselineskip
+%     \progressbar@boxheight=\ht\progressbar@blockbox
+%     \advance\progressbar@boxheight by \dp\progressbar@blockbox
+%     {\parbox[t]{0cm}{
+%       \usebeamercolor{block body\ifx#1\@empty\else\space#1\fi}
+%       \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
+%     }}
+%   {\parbox[t]{0cm}{
+%       \vskip0.5\baselineskip
+%       \ \hfill{\box\progressbar@blockbox}\hfill\
+%     }}\par
+%     \vskip-1\baselineskip
+%   }
+% }
 
-\defblock
-\defblock[example]
-\defblock[alerted]
+% \defblock
+% \defblock[example]
+% \defblock[alerted]
 
 %%% Bruno's factorized version ends %%%
 
@@ -179,15 +281,15 @@
 %%%   \advance\progressbar@boxheight by \dp\progressbar@blockbox
 %%%   {\parbox[t]{0cm}{
 %%%     \usebeamercolor{block body}
-%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
 %%%   }}
 %%% {\parbox[t]{0cm}{
 %%%     \vskip0.5\baselineskip
-%%%     \ \hfill{\box\progressbar@blockbox}\hfill\ 
+%%%     \ \hfill{\box\progressbar@blockbox}\hfill\
 %%%   }}\par
 %%%   \vskip-1\baselineskip
 %%% }
-%%% 
+%%%
 %%% \defbeamertemplate*{block alerted begin}{progressbar theme}
 %%% {
 %%%   \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\vskip-0.25\baselineskip\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor[fg]{block title alerted}\insertblocktitle}\\[-0.3cm]% Just to be "babel-safe"
@@ -203,15 +305,15 @@
 %%%   \advance\progressbar@boxheight by \dp\progressbar@blockbox
 %%%   {\parbox[t]{0cm}{
 %%%     \usebeamercolor{block body alerted}
-%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
 %%%   }}
 %%% {\parbox[t]{0cm}{
 %%%     \vskip0.5\baselineskip
-%%%     \ \hfill{\box\progressbar@blockbox}\hfill\ 
+%%%     \ \hfill{\box\progressbar@blockbox}\hfill\
 %%%   }}\par
 %%%   \vskip-1\baselineskip
 %%% }
-%%% 
+%%%
 %%% \defbeamertemplate*{block example begin}{progressbar theme}
 %%% {
 %%%   \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\vskip-0.25\baselineskip\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor[fg]{block title example}\insertblocktitle}\\[-0.3cm]% Just to be "babel-safe"
@@ -227,11 +329,11 @@
 %%%   \advance\progressbar@boxheight by \dp\progressbar@blockbox
 %%%   {\parbox[t]{0cm}{
 %%%     \usebeamercolor{block body example}
-%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
 %%%   }}
 %%% {\parbox[t]{0cm}{
 %%%     \vskip0.5\baselineskip
-%%%     \ \hfill{\box\progressbar@blockbox}\hfill\ 
+%%%     \ \hfill{\box\progressbar@blockbox}\hfill\
 %%%   }}\par
 %%%   \vskip-1\baselineskip
 %%% }
@@ -318,7 +420,7 @@
 
 \pgfdeclareradialshading[structure.fg,bg]{smallsphere}{\pgfpoint{-0.1479452ex}{0.18287671ex}}%
 {%
-  color(0cm)=(structure.fg!15); 
+  color(0cm)=(structure.fg!15);
   color(0.1315068ex)=(structure.fg!75);
   color(0.2630136ex)=(structure.fg!70!black);
   color(0.36164383ex)=(structure.fg!50!black);
@@ -341,6 +443,6 @@
 \mode
 <all>
 
-%%% Local Variables: 
-%%% TeX-master: "~/texmf/tex/latex/beamer/test/test.tex"
-%%% End: 
+%%% Local Variables:
+%%% TeX-master: "./demo.tex"
+%%% End:
