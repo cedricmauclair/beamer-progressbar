@@ -1,17 +1,47 @@
-\ProvidesPackage{beamerthemeprogressbar}[2007/06/21]
+\ProvidesPackage{beamerthemeprogressbar}[2011/05/02]
 
 % Beamer theme by Sylvain Bouveret <sylvain[dot]bouveret[aT]cert[DoT]fr>
-% sep. 2010 version 0.42
-%
 % based on the LaTeX-Beamer package :
+%
 % Copyright 2003 by Till Tantau <tantau@users.sourceforge.net>
 %
 % This program can be redistributed and/or modified under the terms
 % of the GNU Public License, version 2.
 
-\RequirePackage{tikz}
-\RequirePackage{bibunits}
+% This fork was created to satisfy personnal taste in code.
+%
+% Last modified by Cédric Mauclair.
 
+
+\RequirePackage{pgfkeys}
+\RequirePackage{ifthen}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+
+
+%<< Processing options >>
+
+\pgfkeys{/pb/.is family}
+
+\pgfqkeys{/pb}{%
+  headline/.store in=\pb@headline,
+  def.frametitle/.store in=\pb@frametitle,
+  frametitle/.is choice,
+  frametitle/normal/.style={/pb/def.frametitle=normal},
+  frametitle/picture/.style={/pb/def.frametitle=picture},
+  imagename/.store in=\pb@imagename,
+  titlepage/.store in=\pb@titlepage}
+
+\def\progressbaroptions{\pgfqkeys{/pb}}
+
+% default values
+\progressbaroptions{%
+  titlepage=picture,
+  frametitle=picture,% also accepts 'normal'
+  imagename=images/tree04.jpg,
+  headline=none}
+
+%>>
 
 \usecolortheme{progressbar}
 \useinnertheme{progressbar}
@@ -23,7 +53,7 @@
 \AtBeginDocument{%
   \typeout{..................................................................}
   \typeout{You are using the progressbar beamer theme (Sylvain B.)}
-  \typeout{Version: 0.42 September 2010.}
+  \typeout{Version forked by Cedric Mauclair: 2011/05/02}
   \typeout{..................................................................}
 }
 
@@ -31,15 +61,15 @@
 
 \renewcommand{\appendix}[1][0void0]
 {
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % This piece of code is supposed to introduce a bias in the
   % number of slides
   \makeatletter
   \immediate\write\@auxout{\string\@writefile{nav}%
     {\noexpand\headcommand{\noexpand\def\noexpand\insertintermediateframenumber{\the\c@framenumber}}}}
   \renewcommand{\insertintermediateframenumber}{\inserttotalframenumber}
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
   \def\tmparg{#1}
   \def\tmpargref{0void0}
   \ifx\tmparg\tmpargref\else
@@ -52,7 +82,7 @@
   \end{frame}
   \fi
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % We recompute the progressbar step and the current position
 
   \progressbar@numer=1
@@ -63,7 +93,11 @@
   \ifnum\progressbar@denom=0\else\divide\progressbar@tmpresult by \progressbar@denom\fi
   \global\progressbar@stepbar=\progressbar@tmpresult
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   \makeatother
 }
+
+%%% Local Variables:
+%%% TeX-master: "./demo.tex"
+%%% End:
