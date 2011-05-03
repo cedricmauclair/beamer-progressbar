@@ -13,7 +13,33 @@
 % Last modified by Cédric Mauclair.
 
 
+\RequirePackage{pgfkeys, tikz}
 \usetikzlibrary[fadings]
+
+
+%<< Processing options >>
+
+\pgfkeys{/pb/.is family}
+
+\pgfqkeys{/pb}{%
+  .frametitle/.store in=\pb@frametitle,
+  frametitle/.is choice,
+  frametitle/center/.style={%
+    /pb/.frametitle=center},
+  frametitle/picture-section/.style={%
+    /pb/.frametitle=picture-section},
+  frametitle/picture-subsection/.style={%
+    /pb/.frametitle=picture-subsection},
+  frametitle/picture/.style={%
+    /pb/.frametitle=picture}}
+
+\providecommand\progressbaroptions{\pgfqkeys{/pb}}
+
+% default values
+\progressbaroptions{%
+  frametitle=picture}% also 'center' and 'picture-(sub)section'
+
+%>>
 
 
 \mode
@@ -186,7 +212,6 @@
 \def\const@picturesubsection{picture-subsection}
 
 \defbeamertemplate*{frametitle}{progressbar}{
-  \vskip-1ex% reclaim some space on the headline
   % 'center'
   \ifx\pb@frametitle\const@center
     \centering
@@ -205,6 +230,7 @@
   \fi
   % 'picture-section'
   \ifx\pb@frametitle\const@picturesection
+    \vskip-1ex% reclaim some space on the headline
     \parbox[c]{0.15\textwidth}{\pgfuseimage{headimage}}%
     \parbox[c]{0.85\textwidth}{%
       \ifx\insertsection\@empty\else
@@ -219,6 +245,7 @@
   \fi
   % 'picture-subsection'
   \ifx\pb@frametitle\const@picturesubsection
+    \vskip-1ex% reclaim some space on the headline
     \parbox[c]{0.15\textwidth}{\pgfuseimage{headimage}}%
     \parbox[c]{0.85\textwidth}{%
       \ifx\insertsection\@empty\else

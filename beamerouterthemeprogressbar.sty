@@ -13,8 +13,42 @@
 % Last modified by Cédric Mauclair.
 
 
-\RequirePackage{calc}
+\RequirePackage{calc, pgfkeys, tikz}
 \usetikzlibrary[arrows]
+
+
+%<< Processing options >>
+
+\pgfkeys{/pb/.is family}
+
+\pgfqkeys{/pb}{%
+  .headline/.store in=\pb@headline,
+  headline/.is choice,
+  headline/none/.style={%
+    /pb/.headline=none},
+  headline/sections/.style={%
+    /pb/.headline=sections},
+  headimage/.store in=\pb@headimage,
+  titleimage/.store in=\pb@titleimage,
+  titlepage/.store in=\pb@titlepage}
+
+\providecommand\progressbaroptions{\pgfqkeys{/pb}}
+
+\AtBeginDocument{%
+  \pgfdeclareimage[width=0.27\textwidth, interpolate=true]
+    {titleimage}{\pb@headimage}
+  \pgfdeclareimage[width=0.12\textwidth, interpolate=true]
+    {headimage}{\pb@titleimage}
+}
+
+% default values
+\progressbaroptions{%
+  headline=none,% also 'sections'
+  headimage=images/tree04.jpg,
+  titlepage=picture,
+  titleimage=images/tree04.jpg}
+
+%>>
 
 
 \mode
