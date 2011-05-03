@@ -13,10 +13,9 @@
 % Last modified by Cédric Mauclair.
 
 
-\RequirePackage{pgfkeys}
+\RequirePackage{pgfkeys, tikz}
 \RequirePackage{ifthen}
 \RequirePackage{graphicx}
-\RequirePackage{tikz}
 
 
 %<< Processing options >>
@@ -26,23 +25,44 @@
 \pgfqkeys{/pb}{%
   .headline/.store in=\pb@headline,
   headline/.is choice,
-  headline/none/.style={/pb/.headline=none},
-  headline/sections/.style={/pb/.headline=sections},
+  headline/none/.style={%
+    /pb/.headline=none},
+  headline/sections/.style={%
+    /pb/.headline=sections,
+    /pb/frametitle=center},
   .frametitle/.store in=\pb@frametitle,
   frametitle/.is choice,
-  frametitle/normal/.style={/pb/.frametitle=normal},
-  frametitle/picture/.style={/pb/.frametitle=picture},
-  imagename/.store in=\pb@imagename,
+  frametitle/center/.style={%
+    /pb/.frametitle=center},
+  frametitle/picture-section/.style={%
+    /pb/.frametitle=picture-section,
+    /pb/headline=none},
+  frametitle/picture-subsection/.style={%
+    /pb/.frametitle=picture-subsection,
+    /pb/headline=none},
+  frametitle/picture/.style={%
+    /pb/.frametitle=picture,
+    /pb/headline=none},
+  headimage/.store in=\pb@headimage,
+  titleimage/.store in=\pb@titleimage,
   titlepage/.store in=\pb@titlepage}
 
 \def\progressbaroptions{\pgfqkeys{/pb}}
 
+\AtBeginDocument{%
+  \pgfdeclareimage[width=0.27\textwidth, interpolate=true]
+    {titleimage}{\pb@headimage}
+  \pgfdeclareimage[width=0.12\textwidth, interpolate=true]
+    {headimage}{\pb@titleimage}
+}
+
 % default values
 \progressbaroptions{%
+  headline=none,% also 'sections'
   titlepage=picture,
-  frametitle=picture,% also accepts 'normal'
-  imagename=images/tree04.jpg,
-  headline=sections}% also accepts 'sections
+  frametitle=picture,% also 'center' and 'picture-(sub)section'
+  headimage=images/tree04.jpg,
+  titleimage=images/tree04.jpg}
 
 %>>
 
@@ -59,8 +79,6 @@
   \typeout{Version forked by Cedric Mauclair: 2011/05/02}
   \typeout{..................................................................}
 }
-
-\def\insertintermediateframenumber{\inserttotalframenumber}
 
 \renewcommand{\appendix}[1][0void0]
 {
@@ -100,14 +118,6 @@
 
   \makeatother
 }
-
-% handouts
-\mode<handout>{%
-  \setbeamercolor{frametitle}{fg=structure.fg, bg=white}
-  \setbeamertemplate{frametitle}{%
-    \usebeamerfont{frametitle}%
-    \usebeamercolor[fg]{frametitle}%
-    \insertframetitle}}
 
 
 %%% Local Variables:

@@ -16,6 +16,10 @@
 \RequirePackage{calc}
 \usetikzlibrary[arrows]
 
+
+\mode
+<presentation>
+
 %<< progress bar         >>
 
 % some computations dedicated to the progressbar
@@ -64,55 +68,49 @@
   \fi}
 
 %>>
-%<< customized templates >>
-
-% \newlength\pb@sectionboxwidth
-% \newlength\pb@sectionboxheight
-% \newbox\pb@sectionbox
-% \newbox\pb@sectionboxbox
-
-\usesectionheadtemplate
-  {\hfill
-    \setbox\pb@sectionbox=\hbox{\insertsectionhead}%
-    \pb@sectionboxwidth=\wd\pb@sectionbox
-    \advance\pb@sectionboxwidth by 4pt
-    \setbox\pb@sectionbox=\hbox{\pgfinterruptpicture t \endpgfinterruptpicture}%
-    \pb@sectionboxheight=\ht\pb@sectionbox
-    \advance\pb@sectionboxheight by 4pt
-    \begin{tikzpicture}
-      \usebeamercolor{section in head/foot}
-      \useasboundingbox (-0.5\pb@sectionboxwidth, 0pt) rectangle (0.5\pb@sectionboxwidth, \pb@sectionboxheight);
-      \draw[anchor=base] (0pt, 2pt) node {\color{fg} \insertsectionhead};
-      \draw[rounded corners=3pt, draw=fg] (-0.5\pb@sectionboxwidth, 0pt) rectangle (0.5\pb@sectionboxwidth, \pb@sectionboxheight);
-    \end{tikzpicture}
-  }
-  {\hfill
-    \setbox\pb@sectionbox=\hbox{\pgfinterruptpicture\insertsectionhead\endpgfinterruptpicture}%
-    \pb@sectionboxwidth=\wd\pb@sectionbox
-    \advance\pb@sectionboxwidth by 4pt
-    \setbox\pb@sectionboxbox=\hbox{\pgfinterruptpicture t \endpgfinterruptpicture}%
-    \pb@sectionboxheight=\ht\pb@sectionboxbox
-    \advance\pb@sectionboxheight by 4pt
-    \begin{tikzpicture}
-      \usebeamercolor{section in head/foot}
-      \useasboundingbox (-0.5\pb@sectionboxwidth, 0pt) rectangle (0.5\pb@sectionboxwidth, \pb@sectionboxheight);
-      \draw[anchor=base] (0pt, 2pt) node {\color{fg} \insertsectionhead};
-    \end{tikzpicture}
-  }
-
-%>>
 %<< headline/footline    >>
+
+\defbeamertemplate*{section in head/foot}{progressbar}{%
+  \setbox\@tempboxa\hbox{\strut\insertsectionhead}%
+  \setdim\@tempdima{\wd\@tempboxa+4pt}%
+  \setdim\@tempdimb{\ht\@tempboxa+4pt}%
+  \begin{tikzpicture}
+    \usebeamercolor{section in head/foot}
+    \path [clip]
+      (-1pt,-1pt) rectangle (\@tempdima+1pt, \@tempdimb+1pt);
+    \path [draw=fg, thin, rounded corners=3pt]
+      (0,0) rectangle (\@tempdima, \@tempdimb);
+    \node [anchor=text, text=fg]
+      at (2pt,2pt) {\strut\insertsectionhead};
+  \end{tikzpicture}}
+
+\setbeamercolor{section in head/foot shaded}{fg=gray!80}
+\defbeamertemplate*{section in head/foot shaded}{progressbar}{%
+  \setbox\@tempboxa\hbox{\strut\insertsectionhead}%
+  \setdim\@tempdima{\wd\@tempboxa+4pt}%
+  \setdim\@tempdimb{\ht\@tempboxa+4pt}%
+  \begin{tikzpicture}
+    \usebeamercolor{section in head/foot shaded}
+    \path [clip]
+      (-1pt,-1pt) rectangle (\@tempdima+1pt, \@tempdimb+1pt);
+    \path [rounded corners=3pt]
+      (0,0) rectangle (\@tempdima, \@tempdimb);
+    \node [anchor=text, text=fg]
+      at (2pt,2pt) {\strut\insertsectionhead};
+  \end{tikzpicture}}
 
 \def\const@none{none}
 \def\const@sections{sections}
 
 \defbeamertemplate*{headline}{progressbar}{%
+  \vskip2pt
   \leavevmode
   \begin{beamercolorbox}
     [ignorestructure.bg=true, wd=\paperwidth, ht=4ex, dp=1.125ex]{structure.fg}
+    \ifnum\insertframenumber=1\else
     \ifx\pb@headline\const@sections
       \insertsectionnavigationhorizontal{\paperwidth}{}{}
-    \fi
+    \fi\fi
   \end{beamercolorbox}}
 
 \defbeamertemplate*{footline}{progressbar}
@@ -121,76 +119,90 @@
 %>>
 %<< title page           >>
 
-\defbeamertemplate*{title page}{progressbar}{
-  \edef\tempa{picture}
-  \ifx\pb@barpage\tempa
-  \vfill
-  \parbox{0.28\textwidth}{
-    \pgfimage[width=0.27\textwidth]{\pb@imagename}
-  }\hfill
-  \parbox{0.7\textwidth}{
+\newcommand\insertmaybe[1]{%
+  \expandafter\ifx\csname insert#1\endcsname\@empty\else
+    \endgraf
+    {\usebeamerfont{#1}%
+     \usebeamercolor[fg]{#1}%
+     \csname insert#1\endcsname}%
+  \fi}
+
+\defbeamertemplate*{title page}{progressbar}{%
+  % 'picture'
+  \ifx\pb@titlepage\const@picture
+  \parbox{0.30\textwidth}{\pgfuseimage{titleimage}}%
+  \parbox{0.70\textwidth}{
     \begin{center}
-      {\usebeamerfont{title}\usebeamercolor{title}{\color{fg}\inserttitle}}
-      \ifx\insertsubtitle\@empty\\[\baselineskip]
-      \else{\\\usebeamerfont{subtitle}\usebeamercolor{subtitle}{\color{fg}\insertsubtitle}}\\[\baselineskip]\fi
-      \hrule\vskip\baselineskip
-      \ifx\insertauthor\@empty\ \\
-      \else{\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\\fi
-      \ifx\insertdate\@empty\ \\
-      \else{\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\\fi
-      \ifx\insertinstitute\@empty
-      \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\\fi
+      % title
+      {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle}%
+      \insertmaybe{subtitle}
+      % rule
+      \vskip\baselineskip\hrule\vskip\baselineskip
+      % optionnal content
+      \insertmaybe{author}
+      \insertmaybe{date}
+      \insertmaybe{institute}
       \insertlogo
-    \end{center}
-  }\vfill
+    \end{center}}
+  % anything else
   \else
-  \pgfdeclarehorizontalshading{separationtitlepagelineshading}{0.5pt}{color(0cm)=(bg);
-    color(0.5\textwidth)=(structure.fg); color(\textwidth)=(bg)}
-  \begin{center}
-    \vfill
-    {\usebeamerfont{title}\usebeamercolor{title}{\color{fg}\inserttitle}}
-
-    \ifx\insertsubtitle\@empty
-    \else{\usebeamerfont{subtitle}\usebeamercolor{subtitle}{\color{fg}\insertsubtitle}}\\[\baselineskip]\fi
-
-    \pgfuseshading{separationtitlepagelineshading}
-    \ifx\insertauthor\@empty\ \\
-    \else{\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\\fi
-    \ifx\insertdate\@empty\ \\
-    \else{\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\\fi
-    \ifx\insertinstitute\@empty
-    \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\\fi
-    \insertlogo
-    \pgfuseshading{separationtitlepagelineshading}
-    \vfill
-  \end{center}
+    \pgfdeclarehorizontalshading{separation}{0.5pt}{%
+        color(0cm)=(structure.bg);
+        color(0.5\textwidth)=(structure.fg);
+        color(\textwidth)=(structure.bg)}
+    \begin{center}
+      % title
+      {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle}%
+      \insertmaybe{subtitle}
+      % rule
+      \pgfuseshading{separation}\vskip1.4ex
+      % optionnal content
+      \insertmaybe{author}
+      \insertmaybe{date}
+      \insertmaybe{institute}
+      \insertlogo
+      % rule
+      \pgfuseshading{separation}
+    \end{center}
   \fi
 }
 
 %>>
 %<< background           >>
 
-\defbeamertemplate*{background canvas}{progressbar}{\pgfuseshading{background shading}}%
+\defbeamertemplate*{background canvas}{progressbar}
+  {\pgfuseshading{background shading}}
 
 \AtBeginDocument{%
-  {
-    \usebeamercolor{section in head/foot}
+  \begingroup
+    \usebeamercolor{palette secondary}
     \usebeamercolor{normal text}
-    \pgfdeclareverticalshading{background shading}{\the\paperwidth}{color(0cm)=(section in head/foot.bg); color(3cm)=(bg); color(0.6\paperheight)=(bg); color(0.9\paperheight)=(section in head/foot.bg); color(\paperheight)=(black!60!section in head/foot.bg)
-    }
-  }
-}
+    \pgfdeclareverticalshading{background shading}\paperwidth{%
+      color(0cm)=(palette secondary.bg);% bottom
+      color(3cm)=(normal text.bg);
+      color(0.6\paperheight)=(normal text.bg);
+      color(0.9\paperheight)=(palette secondary.bg);
+      color(\paperheight)=(black!60!palette secondary.bg)}% top
+  \endgroup}
 
 %>>
 
-% \mode<handout>{%
-%   \setbeamertemplate{background canvas}{}%
-%   \setbeamertemplate{footline}{
-%     \begin{beamercolorbox}[wd=\paperwidth, ht=6mm, dp=0pt]{structure.fg}
-%       \quad\insertshorttitle\hfill
-%       \insertframenumber~/~\inserttotalframenumber\quad
-%       \vskip0.1cm
-%     \end{beamercolorbox}}}
+
+\mode
+<handout>{%
+  % background
+  \setbeamertemplate{background canvas}{}
+  % headline/footline
+  \setbeamertemplate{headline}{}
+  \setbeamertemplate{footline}{%
+    \begin{beamercolorbox}[wd=\paperwidth]{structure.fg}
+      \usebeamerfont{footline}%
+      \quad\insertshorttitle\hfill
+      \insertframenumber~/~\inserttotalframenumber\quad{}
+      \vskip1mm
+    \end{beamercolorbox}}
+  % title page
+  \setbeamertemplate{title page}[default]}
 
 
 %%% Local Variables:

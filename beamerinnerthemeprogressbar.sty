@@ -16,6 +16,9 @@
 \usetikzlibrary[fadings]
 
 
+\mode
+<presentation>
+
 %<< Bibliography       >>
 
 \definecolor{bibstruct}{rgb}{0.95,0.95,0.85}
@@ -24,13 +27,15 @@
 % no new macro to learn for the user
 \let\bibliographyorig\bibliography
 \def\bibliography#1{%
-  \begin{center}
-    \begin{tikzpicture}
-      \usebeamercolor{bibliography structure}
-      \node [draw=fg!20!bg, fill=bg, rounded corners=2pt]
-        {\parbox{0.95\textwidth}{\bibliographyorig{#1}\vskip2mm}};
-    \end{tikzpicture}
-  \end{center}}
+  \begingroup
+    \setbeamercolor{block body}
+      {use=bibliography structure, bg=bibliography structure.bg}
+    \begin{block}{}
+      \parbox{0.95\linewidth}{%
+        \bibliographyorig{#1}
+        \vskip2mm}
+    \end{block}
+  \endgroup}
 
 % nice sheet of paper, bottom right cornered
 \defbeamertemplate*{bibliography item}{progressbar}{
@@ -175,35 +180,61 @@
 %<< Frame title        >>
 
 \def\pb@separator{--}
-\edef\NORMAL{normal}
-\edef\PICTURESUBSECTION{picture-subsection}
+\def\const@center{center}
+\def\const@picture{picture}
+\def\const@picturesection{picture-section}
+\def\const@picturesubsection{picture-subsection}
 
 \defbeamertemplate*{frametitle}{progressbar}{
-  \ifx\pb@frametitle\NORMAL
-    {\centering\usebeamerfont{frametitle}%
-     \usebeamercolor[fg]{frametitle}\insertframetitle\endgraf}
-  \else
-    \ifx\pb@frametitle\PICTURESUBSECTION
-      \parbox[c]{0.13\textwidth}{
-        \includegraphics[width=0.12\textwidth]{\pb@imagename}}
-      \parbox[c]{0.85\textwidth}{%
-        \usebeamercolor[fg]{frametitle}
-        \ifx\insertsection\@empty\else
-          \insertsection\\[-3mm]\fi
-        \ifx\insertsubsection\@empty\else
-          \space\pb@separator\space\insertsubsection\fi
-        \rule{0.7\textwidth}{0.5pt}\endgraf
-        {\usebeamerfont{frametitle}\strut\insertframetitle}}
-    \else
-      \parbox[c]{0.13\textwidth}{
-        \includegraphics[width=0.12\textwidth]{\pb@imagename}}
-      \parbox[c]{0.85\textwidth}{%
-        \usebeamercolor[fg]{frametitle}
-        \ifx\insertsection\@empty\else
-          \insertsection\\[-3mm]\fi
-        \rule{0.7\textwidth}{0.5pt}\endgraf
-        {\usebeamerfont{frametitle}\strut\insertframetitle}}
-    \fi
+  \vskip-1ex% reclaim some space on the headline
+  % 'center'
+  \ifx\pb@frametitle\const@center
+    \centering
+    \usebeamerfont{frametitle}%
+    \usebeamercolor[fg]{frametitle}%
+    \insertframetitle\endgraf
+  \fi
+  % 'picture'
+  \ifx\pb@frametitle\const@picture
+    \parbox[c]{0.15\textwidth}{\pgfuseimage{headimage}}%
+    \parbox[c]{0.85\textwidth}{%
+      \usebeamerfont{frametitle}%
+      \usebeamercolor[fg]{frametitle}%
+      \rule{\linewidth}{0.5pt}\endgraf
+      \strut\insertframetitle}
+  \fi
+  % 'picture-section'
+  \ifx\pb@frametitle\const@picturesection
+    \parbox[c]{0.15\textwidth}{\pgfuseimage{headimage}}%
+    \parbox[c]{0.85\textwidth}{%
+      \ifx\insertsection\@empty\else
+        \usebeamerfont{section in frametitle}%
+        \usebeamercolor[fg]{section in frametitle}%
+        \insertsection\fi
+      \strut\\[-2ex]
+      \usebeamerfont{frametitle}%
+      \usebeamercolor[fg]{frametitle}%
+      \rule{\linewidth}{0.5pt}\endgraf
+      \strut\insertframetitle}
+  \fi
+  % 'picture-subsection'
+  \ifx\pb@frametitle\const@picturesubsection
+    \parbox[c]{0.15\textwidth}{\pgfuseimage{headimage}}%
+    \parbox[c]{0.85\textwidth}{%
+      \ifx\insertsection\@empty\else
+        \usebeamerfont{section in frametitle}%
+        \usebeamercolor[fg]{section in frametitle}%
+        \insertsection\fi
+      \ifx\insertsubsection\@empty\else
+        \space\pb@separator\space
+        \usebeamerfont{subsection in frametitle}%
+        \usebeamercolor[fg]{subsection in frametitle}%
+        \insertsubsection\fi
+      \strut\\[-2ex]
+      \usebeamerfont{frametitle}%
+      \usebeamercolor[fg]{frametitle}%
+      \rule{\linewidth}{0.5pt}\endgraf
+      \strut\insertframetitle}
   \fi}
 
 %>>
@@ -250,18 +281,58 @@
 % table of contents
 \setbeamercolor{section in toc} {parent=itemize item}
 \setbeamertemplate{section in toc}{%
-  \leavevmode
   \begin{tikzpicture}[baseline=-1ex]
     \node [shaded ball, inner sep=1.6pt]
       {\usebeamerfont{section in toc}%
        \usebeamercolor[bg]{section in toc}%
        \inserttocsectionnumber};
    \end{tikzpicture}
-   \usebeamerfont{section in toc}%
-   \usebeamercolor[fg]{section in toc}%
-   \inserttocsection\endgraf}
+   \usebeamerfont{section text in toc}%
+   \usebeamercolor[fg]{section text in toc}%
+   \inserttocsection}
 
 %>>
+
+
+\mode
+<handout>{
+  \setbeamerfont{frametitle}{series=\bfseries}
+  \setbeamercolor{frametitle}{fg=structure.fg, bg=white}
+  \setbeamertemplate{frametitle}{%
+    \usebeamerfont{frametitle}%
+    \usebeamercolor[fg]{frametitle}%
+    \insertframetitle}
+  % blocks
+  \setbeamercolor{block title}{bg=normal text.bg}
+  \setbeamercolor{block body}{bg=normal text.bg}
+  \setbeamercolor{bibliography structure}{bg=normal text.bg}
+  \setbeamercolor{block title example}{bg=normal text.bg}
+  \setbeamercolor{block body example}{bg=normal text.bg}
+  \setbeamercolor{block title alerted}{bg=normal text.bg}
+  \setbeamercolor{block body alerted}{bg=normal text.bg}
+  \setbeamertemplate{block begin}[default]
+  \setbeamertemplate{block end}[default]
+  \setbeamertemplate{block example begin}[default]
+  \setbeamertemplate{block example end}[default]
+  \setbeamertemplate{block alerted begin}[default]
+  \setbeamertemplate{block alerted end}[default]
+  \addtobeamertemplate{block begin}{% fix for items
+    \addtobeamertemplate{itemize/enumerate body begin}
+      {\kern-0.85\topsep}{}
+    \addtobeamertemplate{itemize/enumerate body end}
+      {}{\kern-\dimexpr0.85\topsep+0.25\topskip\relax}}{}
+  % items
+  \setbeamertemplate{itemize items}[circle]
+  \setbeamertemplate{enumerate items}[default]
+  \setbeamertemplate{section in toc}{%
+    \usebeamerfont{section text in toc}%
+    \usebeamercolor[fg]{section text in toc}
+    \inserttocsectionnumber. \inserttocsection}
+  \setbeamertemplate{subsection in toc}{%
+    \usebeamerfont{subsection text in toc}%
+    \usebeamercolor[fg]{subsection text in toc}
+    \inserttocsectionnumber.\inserttocsubsectionnumber.
+    \inserttocsubsection}}
 
 
 %%% Local Variables:

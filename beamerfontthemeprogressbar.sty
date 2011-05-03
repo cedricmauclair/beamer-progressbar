@@ -13,10 +13,8 @@
 % Last modified by Cédric Mauclair.
 
 
-\RequirePackage{xspace}
-
-
 \usefonttheme{default}
+
 
 % titlepage
 \setbeamerfont{title}     {parent=structure, size=\normalsize, series=\bfseries}
@@ -35,7 +33,13 @@
 
 % sections
 \setbeamerfont{section in toc}
-  {parent=structure, size=\scriptsize, series=\bfseries}
+  {parent=structure, size=\scriptsize}
+\setbeamerfont{subsection in toc}
+  {parent=structure, size=\scriptsize}
+\setbeamerfont{section text in toc}
+  {parent=section in toc, size=\normalsize, series=\bfseries}
+\setbeamerfont{subsection text in toc}
+  {parent=subsection in toc, size=\scriptsize, series=\bfseries}
 \setbeamerfont{section in head/foot}
   {size=\tiny, series=\bfseries}
 
