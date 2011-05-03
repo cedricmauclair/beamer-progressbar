@@ -290,6 +290,14 @@
    \usebeamerfont{section text in toc}%
    \usebeamercolor[fg]{section text in toc}%
    \inserttocsection}
+\setbeamertemplate{subsection in toc}{%
+  \qquad
+  {\usebeamerfont{subsection in toc}%
+   \usebeamercolor[fg]{subsection in toc}%
+   \inserttocsubsectionnumber.}
+  \usebeamerfont{subsection text in toc}%
+  \usebeamercolor[fg]{subsection text in toc}%
+  \inserttocsubsection}
 
 %>>
 
@@ -316,11 +324,11 @@
   \setbeamertemplate{block example end}[default]
   \setbeamertemplate{block alerted begin}[default]
   \setbeamertemplate{block alerted end}[default]
-  \addtobeamertemplate{block begin}{% fix for items
+  \addtobeamertemplate{block begin}{}{% fix for items
     \addtobeamertemplate{itemize/enumerate body begin}
       {\kern-0.85\topsep}{}
     \addtobeamertemplate{itemize/enumerate body end}
-      {}{\kern-\dimexpr0.85\topsep+0.25\topskip\relax}}{}
+      {}{\kern-\dimexpr0.85\topsep+0.25\topskip\relax}}
   % items
   \setbeamertemplate{itemize items}[circle]
   \setbeamertemplate{enumerate items}[default]
