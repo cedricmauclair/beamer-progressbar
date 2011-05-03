@@ -24,11 +24,14 @@
 \pgfkeys{/pb/.is family}
 
 \pgfqkeys{/pb}{%
-  headline/.store in=\pb@headline,
-  def.frametitle/.store in=\pb@frametitle,
+  .headline/.store in=\pb@headline,
+  headline/.is choice,
+  headline/none/.style={/pb/.headline=none},
+  headline/sections/.style={/pb/.headline=sections},
+  .frametitle/.store in=\pb@frametitle,
   frametitle/.is choice,
-  frametitle/normal/.style={/pb/def.frametitle=normal},
-  frametitle/picture/.style={/pb/def.frametitle=picture},
+  frametitle/normal/.style={/pb/.frametitle=normal},
+  frametitle/picture/.style={/pb/.frametitle=picture},
   imagename/.store in=\pb@imagename,
   titlepage/.store in=\pb@titlepage}
 
@@ -39,7 +42,7 @@
   titlepage=picture,
   frametitle=picture,% also accepts 'normal'
   imagename=images/tree04.jpg,
-  headline=none}
+  headline=sections}% also accepts 'sections
 
 %>>
 
@@ -97,6 +100,15 @@
 
   \makeatother
 }
+
+% handouts
+\mode<handout>{%
+  \setbeamercolor{frametitle}{fg=structure.fg, bg=white}
+  \setbeamertemplate{frametitle}{%
+    \usebeamerfont{frametitle}%
+    \usebeamercolor[fg]{frametitle}%
+    \insertframetitle}}
+
 
 %%% Local Variables:
 %%% TeX-master: "./demo.tex"

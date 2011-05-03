@@ -1,4 +1,4 @@
-\documentclass[utf8, a4paper]{beamer}
+\documentclass[utf8, a4paper, handout]{beamer}
 
 \usepackage[english] {babel}
 \usepackage[T1]      {fontenc}
@@ -21,7 +21,7 @@
 %   {\unittriangle[draw, scale=3, yshift=.5]}
 
 \title
-  [Short Title\hspace{2em}]
+  [Short Title]
   {Full Title of the Presentation}
 
 \author
@@ -38,6 +38,11 @@
 
 \maketitle
 
+\begin{frame}{Overview}
+
+  \tableofcontents
+
+\end{frame}
 
 \section
   {Introduction}
@@ -47,11 +52,23 @@
 
   Things in a Bulleted List\pause
 
-  \begin{itemize}
-  \item Bullets that\pause
-  \item Come up\pause
+  \begin{enumerate}
+  \item Bullets that
+    \begin{enumerate}
+    \item one
+    \item two
+    \end{enumerate}\pause
+  \item Come up
+    \begin{enumerate}
+    \item one
+    \item \emph{two} and three
+    \end{enumerate}\pause
   \item One by one
-  \end{itemize}
+    \begin{enumerate}
+    \item one
+    \item two
+    \end{enumerate}
+  \end{enumerate}
 \end{frame}
 
 

@@ -13,7 +13,6 @@
 % Last modified by Cédric Mauclair.
 
 
-\mode<presentation>
 \usetikzlibrary[fadings]
 
 
@@ -33,12 +32,11 @@
     \end{tikzpicture}
   \end{center}}
 
-\defbeamertemplate*{bibliography item}{progressbar theme}{
+% nice sheet of paper, bottom right cornered
+\defbeamertemplate*{bibliography item}{progressbar}{
   \begin{tikzpicture}[rounded corners=1pt]
     \usebeamercolor{structure}
-    \useasboundingbox
-      (0,0.25) rectangle (0.4,0.5);
-    \path [fill=fg!25!bg]
+    \path [fill=fg!25!bg, use as bounding box]
       (0,0.25) rectangle (0.4,0.5);
     \path[shade, bottom color=bg, top color=fg!25!bg]
       (0,0) -- (0.3,0) -- (0.4,0.12) -- (0.4,0.3) -- (0,0.3) -- cycle;
@@ -56,40 +54,44 @@
       (0.3,0) -- (0.3,0.12) -- (0.4,0.12);
   \end{tikzpicture}}
 
-\def\bibitem{%
-  \@ifnextchar<
-    \beamer@bibitem@store
-    {\gdef\beamer@bibstore{}\beamer@plainbibitem}}
-\def\beamer@bibitem@store<#1>{%
-  \gdef\beamer@bibstore{<#1>}\beamer@plainbibitem}
-\def\beamer@plainbibitem{%
-  \@ifnextchar[\@lbibitem\beamer@bibitem}
-\def\@lbibitem[#1]#2{%
-  \expandafter\item\beamer@bibstore[\@biblabel{#1}\hfill]%
-  \@ifundefined{beamerbib@#2@\the\c@framenumber}
-    {\if@filesw%
-      {\let\protect\noexpand%
-        \immediate\write\@auxout%
-        {\string\bibcite{#2}{\noexpand\hyperlink{beamerbib#2}{#1}}}}\fi%
-      \global\@namedef{beamerbib@#2@\the\c@framenumber}{\relax}%
-      \hypertarget{beamerbib#2}{}%
-    }{}%
-    \def\newblock{\beamer@newblock}\newblock\hskip-0.8ex}% This is really dirty !
-\def\beamer@bibitem#1{\@bibitem{#1}\ignorespaces}
-\def\@bibitem#1{%
-  \expandafter\item\beamer@bibstore\@ifundefined{beamerbib@#1@\the\c@framenumber}%
-  {\if@filesw \immediate\write\@auxout
-    {\string\bibcite{#1}{\noexpand\hyperlink{beamerbib#1}{\the\value{\@listctr}}}}\fi%
-    \global\@namedef{beamerbib@#1@\the\c@framenumber}{\relax}%
-    \hypertarget{beamerbib#1}{}}%
-  {}%
-  \def\newblock{\beamer@newblock}\newblock}
+% TODO: is it really necessary?
+% \def\bibitem{%
+%   \@ifnextchar<
+%     \beamer@bibitem@store
+%     {\gdef\beamer@bibstore{}\beamer@plainbibitem}}
+% \def\beamer@bibitem@store<#1>{%
+%   \gdef\beamer@bibstore{<#1>}\beamer@plainbibitem}
+% \def\beamer@plainbibitem{%
+%   \@ifnextchar[\@lbibitem\beamer@bibitem}
+% \def\@lbibitem[#1]#2{%
+%   \expandafter\item\beamer@bibstore[\@biblabel{#1}\hfill]%
+%   \@ifundefined{beamerbib@#2@\the\c@framenumber}
+%     {\if@filesw%
+%       {\let\protect\noexpand%
+%         \immediate\write\@auxout%
+%         {\string\bibcite{#2}{\noexpand\hyperlink{beamerbib#2}{#1}}}}\fi%
+%       \global\@namedef{beamerbib@#2@\the\c@framenumber}{\relax}%
+%       \hypertarget{beamerbib#2}{}%
+%     }{}%
+%     \def\newblock{\beamer@newblock}\newblock\hskip-0.8ex}% This is really dirty !
+% \def\beamer@bibitem#1{\@bibitem{#1}\ignorespaces}
+% \def\@bibitem#1{%
+%   \expandafter\item\beamer@bibstore\@ifundefined{beamerbib@#1@\the\c@framenumber}%
+%   {\if@filesw \immediate\write\@auxout
+%     {\string\bibcite{#1}{\noexpand\hyperlink{beamerbib#1}{\the\value{\@listctr}}}}\fi%
+%     \global\@namedef{beamerbib@#1@\the\c@framenumber}{\relax}%
+%     \hypertarget{beamerbib#1}{}}%
+%   {}%
+%   \def\newblock{\beamer@newblock}\newblock}
 
 %>>
 %<< Blocks             >>
 
+\def\const@default{default}
+
 \newcommand\defblocktemplate[2][]{%
-  \if @#2@
+  \def\temp{#2}
+  \ifx\const@default\temp
     \edef\doit{\noexpand\defsetblock[\noexpand#1]
       {block begin} {block end}
       {block title} {block body}}
@@ -102,7 +104,8 @@
   \doit}
 
 \newcommand\setblocktemplate[2][]{%
-  \if @#2@
+  \def\temp{#2}
+  \ifx\const@default\temp
     \edef\doit{\noexpand\defsetblock[\noexpand#1]
       {block begin} {block end}
       {block title} {block body}}
@@ -161,7 +164,7 @@
 
 % #1 optional argument can be used to tweak default definition
 % should be treated as key/val list with pgfkeys
-\defblocktemplate{}% default block has no name
+\defblocktemplate{default}% default block is special (see \defblocktemplate)
 \defblocktemplate{alerted}
 \defblocktemplate{example}
 
@@ -186,7 +189,7 @@
       \parbox[c]{0.85\textwidth}{%
         \usebeamercolor[fg]{frametitle}
         \ifx\insertsection\@empty\else
-          \insertsection\fi\\[-3mm]
+          \insertsection\\[-3mm]\fi
         \ifx\insertsubsection\@empty\else
           \space\pb@separator\space\insertsubsection\fi
         \rule{0.7\textwidth}{0.5pt}\endgraf
@@ -197,7 +200,7 @@
       \parbox[c]{0.85\textwidth}{%
         \usebeamercolor[fg]{frametitle}
         \ifx\insertsection\@empty\else
-          \insertsection\fi\\[-3mm]
+          \insertsection\\[-3mm]\fi
         \rule{0.7\textwidth}{0.5pt}\endgraf
         {\usebeamerfont{frametitle}\strut\insertframetitle}}
     \fi
@@ -206,59 +209,60 @@
 %>>
 %<< Items              >>
 
-% %\setbeamertemplate{items}[circle]
-% %\setbeamertemplate{itemize item}{\begin{tikzpicture}\draw[draw=pb@bgblue!60!white,fill=pb@bgblue!40!white] (0, 0) circle (0.07);\end{tikzpicture}}
-% \setbeamertemplate{itemize item}{
-%   \begin{tikzpicture}\shade[ball color=fg!80!bg] (0, 0) circle (0.07);\draw[draw=fg!50!black!90!bg] (0, 0) circle (0.07);\end{tikzpicture}%
-% }
-% \setbeamertemplate{itemize subitem}{\begin{tikzpicture}\shade[ball color=fg!80!white] (0, 0) circle (0.05);\draw[draw=fg!50!black!90!bg] (0, 0) circle (0.05);\end{tikzpicture}}
-% \setbeamertemplate{itemize subsubitem}{\begin{tikzpicture}\shade[ball color=fg!80!white] (0, 0) circle (0.05);\draw[draw=fg!50!black!90!bg] (0, 0) circle (0.05);\end{tikzpicture}}
+\tikzset{%
+  shaded ball/.style={%
+    circle, shade,
+    ball color=fg!80!bg,
+    postaction={draw=fg!50!black!90!bg}}}
 
-% % \setbeamertemplate{enumerate item}{\raisebox{-0.4ex}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.07);\draw  (0, 0) node [draw=structure.fg!50!black!90!bg, inner sep=1pt] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
-% % \setbeamertemplate{enumerate subitem}{\raisebox{-0.4ex}{\begin{tikzpicture}\shade[ball color=structure.fg!80!white] (0, 0) circle (0.07);\draw  (0, 0) node [draw=structure.fg!50!black!90!bg, inner sep=1pt] {\tiny\color{white}\bf\insertenumlabel};\end{tikzpicture}}}
-% \setbeamertemplate{enumerate item}{\raisebox{-0.4ex}{\begin{tikzpicture}\node [draw=fg!50!black!90!bg, inner sep=1pt, shading=ball, circle, ball color=fg!80!white] {\tiny\color{bg}\bf\insertenumlabel};\end{tikzpicture}}}
-% \setbeamertemplate{enumerate subitem}{\raisebox{-0.4ex}{\begin{tikzpicture}\node [draw=fg!50!black!90!bg, inner sep=1pt, shading=ball,circle, ball color=fg!80!white] {\tiny\color{bg}\bf\insertenumlabel};\end{tikzpicture}}}
+% itemize
+\setbeamertemplate{itemize item}{%
+  \begin{tikzpicture}[baseline=-0.8ex]
+    \path [shaded ball] (0,0) circle (0.07);
+  \end{tikzpicture}}
+\setbeamertemplate{itemize subitem}{%
+  \begin{tikzpicture}[baseline=-0.8ex]
+    \path [shaded ball] (0,0) circle (0.05);
+  \end{tikzpicture}}
+\setbeamertemplate{itemize subsubitem}{%
+  \begin{tikzpicture}[baseline=-0.8ex]
+    \path [shaded ball] (0,0) circle (0.05);
+  \end{tikzpicture}}
 
-% \normalsize
-% \pgfdeclareradialshading[bg,parent.bg]{tocsphere}{\pgfpoint{-0.5ex}{0.6ex}}%
-% {%
-%   color(0cm)=(structure.fg!35!white);
-%   color(0.44ex)=(structure.fg!75!white);
-%   color(0.88ex)=(structure.fg!70!black!90!bg);
-%   color(1.2ex)=(structure.fg!50!black!90!bg);
-%   color(1.3ex)=(structure.fg!50!black!90!bg)}
+% enumerate
+\setbeamercolor{enumerate item}    {parent=itemize item}
+\setbeamercolor{enumerate subitem} {parent=enumerate item}
+\setbeamertemplate{enumerate item}{%
+  \begin{tikzpicture}[baseline=-1.2ex]
+    \node [shaded ball, inner sep=1.4pt]
+      {\usebeamerfont{enumerate item}%
+       \usebeamercolor[bg]{enumerate item}%
+       \insertenumlabel};
+  \end{tikzpicture}}
+\setbeamertemplate{enumerate subitem}{%
+  \begin{tikzpicture}[baseline=-1.2ex]
+    \node [shaded ball, inner sep=1pt]
+      {\usebeamerfont{enumerate subitem}%
+       \usebeamercolor[bg]{enumerate subitem}%
+       \insertsubenumlabel};
+   \end{tikzpicture}}
 
-% \pgfdeclareradialshading[structure.fg,bg]{bigsphere}{\pgfpoint{-0.1849315ex}{.2260273ex}}%
-% {%
-%   color(0cm)=(structure.fg!15);
-%   color(0.1643835ex)=(structure.fg!75);
-%   color(0.3287671ex)=(structure.fg!70!black);
-%   color(0.4520547ex)=(structure.fg!50!black);
-%   color(0.53ex)=(structure.fg!50!black)}
-
-% \pgfdeclareradialshading[structure.fg,bg]{smallsphere}{\pgfpoint{-0.1479452ex}{0.18287671ex}}%
-% {%
-%   color(0cm)=(structure.fg!15);
-%   color(0.1315068ex)=(structure.fg!75);
-%   color(0.2630136ex)=(structure.fg!70!black);
-%   color(0.36164383ex)=(structure.fg!50!black);
-%   color(0.427ex)=(bg)}
-
-
-% \setbeamertemplate{section in toc}
-% {\leavevmode%
-%   \raisebox{-0.5ex}{\begin{tikzpicture}\node [draw=fg!50!black!90!bg, inner sep=1.5pt, shading=ball, circle, ball color=fg!80!white] {\scriptsize\color{bg}\bf\inserttocsectionnumber};\end{tikzpicture}}
-%   \inserttocsection\par
-% }
-
-% \mode<handout>
-% \setbeamertemplate{frametitle}{
-%   \setbeamercolor{frametitle}{fg=structure.fg,bg=white}
-%   \usebeamercolor{frametitle}
-%   {\color{fg}\bf \insertframetitle}
-% }
+% table of contents
+\setbeamercolor{section in toc} {parent=itemize item}
+\setbeamertemplate{section in toc}{%
+  \leavevmode
+  \begin{tikzpicture}[baseline=-1ex]
+    \node [shaded ball, inner sep=1.6pt]
+      {\usebeamerfont{section in toc}%
+       \usebeamercolor[bg]{section in toc}%
+       \inserttocsectionnumber};
+   \end{tikzpicture}
+   \usebeamerfont{section in toc}%
+   \usebeamercolor[fg]{section in toc}%
+   \inserttocsection\endgraf}
 
 %>>
+
 
 %%% Local Variables:
 %%% TeX-master: "./demo.tex"
