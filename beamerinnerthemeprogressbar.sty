@@ -70,17 +70,25 @@
 \setbeamercolor{bibliography structure}{fg=normal text.fg, bg=bibstruct}
 
 % no new macro to learn for the user
-\let\bibliographyorig\bibliography
-\def\bibliography#1{%
-  \begingroup
-    \setbeamercolor{block body}
-      {use=bibliography structure, bg=bibliography structure.bg}
-    \begin{block}{}
-      \parbox{0.95\linewidth}{%
-        \bibliographyorig{#1}
-        \vskip2mm}
-    \end{block}
-  \endgroup}
+\AtBeginDocument{%
+  \let\bibliographyorig\bibliography
+  \@ifpackageloaded{bibunits}{%
+    \def\bibliography#1{%
+      \begingroup
+        \setbeamercolor{block body}
+          {use=bibliography structure, bg=bibliography structure.bg}
+        \begin{block}{}
+          \putbib[#1]\vskip2mm
+        \end{block}
+      \endgroup}}{%
+    \def\bibliography#1{%
+      \begingroup
+        \setbeamercolor{block body}
+          {use=bibliography structure, bg=bibliography structure.bg}
+        \begin{block}{}
+          \putbib[#1]\vskip2mm
+        \end{block}
+      \endgroup}}}
 
 % nice sheet of paper, bottom right cornered
 \defbeamertemplate*{bibliography item}{progressbar}{

@@ -5,8 +5,7 @@
 \usepackage[T1]      {fontenc}
 
 \usepackage{amsmath, amsfonts, graphicx}
-
-\usepackage{tikz}
+\usepackage{bibunits, tikz}
 
 \usetheme{progressbar}
 
@@ -131,6 +130,7 @@
 \section
   {Conclusion}
 
+\begin{bibunit}[plain]
 \begin{frame}
   {Credits}
 
@@ -140,16 +140,20 @@
   \item Inspiration: \url{http://www.shawnlankton.com}... (in code)
   \end{itemize}
 
-\end{frame}
-
-
-\begin{frame}
-  {Questions}
-
-  \nocite{lorem,ipsum}
-  \bibliographystyle{plain}
+  \nocite{ipsum}
   \bibliography{demo}
 
 \end{frame}
+\end{bibunit}
+
+\begin{bibunit}[plain]
+\begin{frame}
+  {Questions}
+
+  \nocite{lorem}
+  \bibliography{demo}
+
+\end{frame}
+\end{bibunit}
 
 \end{document}
