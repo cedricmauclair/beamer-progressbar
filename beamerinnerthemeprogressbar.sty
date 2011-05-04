@@ -31,13 +31,17 @@
   frametitle/picture-subsection/.style={%
     /pb/.frametitle=picture-subsection},
   frametitle/picture/.style={%
-    /pb/.frametitle=picture}}
+    /pb/.frametitle=picture},
+  frametitle/rulelength/.store in=\pb@frametitlerulelength,
+  frametitle/rulewidth/.store in=\pb@frametitlerulewidth}
 
 \providecommand\progressbaroptions{\pgfqkeys{/pb}}
 
 % default values
 \progressbaroptions{%
-  frametitle=picture}% also 'center' and 'picture-(sub)section'
+  frametitle=picture,% also 'center' and 'picture-(sub)section'
+  frametitle/rulelength=0.7\linewidth,
+  frametitle/rulewidth=0.5pt}
 
 %>>
 
@@ -225,7 +229,7 @@
     \parbox[c]{0.85\textwidth}{%
       \usebeamerfont{frametitle}%
       \usebeamercolor[fg]{frametitle}%
-      \rule{\linewidth}{0.5pt}\endgraf
+      \rule{\pb@frametitlerulelength}{\pb@frametitlerulewidth}\endgraf
       \strut\insertframetitle}
   \fi
   % 'picture-section'
@@ -240,7 +244,7 @@
       \strut\\[-2ex]
       \usebeamerfont{frametitle}%
       \usebeamercolor[fg]{frametitle}%
-      \rule{\linewidth}{0.5pt}\endgraf
+      \rule{\pb@frametitlerulelength}{\pb@frametitlerulewidth}\endgraf
       \strut\insertframetitle}
   \fi
   % 'picture-subsection'
@@ -260,7 +264,7 @@
       \strut\\[-2ex]
       \usebeamerfont{frametitle}%
       \usebeamercolor[fg]{frametitle}%
-      \rule{\linewidth}{0.5pt}\endgraf
+      \rule{\pb@frametitlerulelength}{\pb@frametitlerulewidth}\endgraf
       \strut\insertframetitle}
   \fi}
 
