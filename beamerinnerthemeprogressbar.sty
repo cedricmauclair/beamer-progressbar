@@ -104,36 +104,6 @@
       (0.3,0) -- (0.3,0.12) -- (0.4,0.12);
   \end{tikzpicture}}
 
-% TODO: is it really necessary?
-% \def\bibitem{%
-%   \@ifnextchar<
-%     \beamer@bibitem@store
-%     {\gdef\beamer@bibstore{}\beamer@plainbibitem}}
-% \def\beamer@bibitem@store<#1>{%
-%   \gdef\beamer@bibstore{<#1>}\beamer@plainbibitem}
-% \def\beamer@plainbibitem{%
-%   \@ifnextchar[\@lbibitem\beamer@bibitem}
-% \def\@lbibitem[#1]#2{%
-%   \expandafter\item\beamer@bibstore[\@biblabel{#1}\hfill]%
-%   \@ifundefined{beamerbib@#2@\the\c@framenumber}
-%     {\if@filesw%
-%       {\let\protect\noexpand%
-%         \immediate\write\@auxout%
-%         {\string\bibcite{#2}{\noexpand\hyperlink{beamerbib#2}{#1}}}}\fi%
-%       \global\@namedef{beamerbib@#2@\the\c@framenumber}{\relax}%
-%       \hypertarget{beamerbib#2}{}%
-%     }{}%
-%     \def\newblock{\beamer@newblock}\newblock\hskip-0.8ex}% This is really dirty !
-% \def\beamer@bibitem#1{\@bibitem{#1}\ignorespaces}
-% \def\@bibitem#1{%
-%   \expandafter\item\beamer@bibstore\@ifundefined{beamerbib@#1@\the\c@framenumber}%
-%   {\if@filesw \immediate\write\@auxout
-%     {\string\bibcite{#1}{\noexpand\hyperlink{beamerbib#1}{\the\value{\@listctr}}}}\fi%
-%     \global\@namedef{beamerbib@#1@\the\c@framenumber}{\relax}%
-%     \hypertarget{beamerbib#1}{}}%
-%   {}%
-%   \def\newblock{\beamer@newblock}\newblock}
-
 %>>
 %<< Blocks             >>
 
