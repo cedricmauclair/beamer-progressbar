@@ -19,6 +19,12 @@
 
 %<< Processing options >>
 
+\pgfkeys{/handlers/.append to/.code=
+  \pgfkeysdef{\pgfkeyscurrentpath}{%
+    \expandafter\@temptokena\expandafter{#1,##1}%
+    \expandafter\edef\csname\expandafter\@gobble\string#1\endcsname{%
+      \the\@temptokena}}}
+
 \pgfkeys{/pb/.is family}
 
 \pgfqkeys{/pb}{%
@@ -33,15 +39,24 @@
   frametitle/picture/.style={%
     /pb/.frametitle=picture},
   frametitle/rulelength/.store in=\pb@frametitlerulelength,
-  frametitle/rulewidth/.store in=\pb@frametitlerulewidth}
+  frametitle/rulewidth/.store in=\pb@frametitlerulewidth,
+  blocks/width/.store in=\pb@blockswidth,
+  blocks/rule/.append to=\pb@blocksrule,
+  blocks/frame/.append to=\pb@blocksframe}
 
 \providecommand\progressbaroptions{\pgfqkeys{/pb}}
+
+\def\pb@blocksrule{}
+\def\pb@blocksframe{}
 
 % default values
 \progressbaroptions{%
   frametitle=picture,% also 'center' and 'picture-(sub)section'
   frametitle/rulelength=0.7\linewidth,
-  frametitle/rulewidth=0.5pt}
+  frametitle/rulewidth=0.5pt,
+  blocks/width=0.95\textwidth,
+  blocks/rule={draw=fg!20!bg,},
+  blocks/frame={draw=fg!20!bg, fill=bg, rounded corners=2pt,}}
 
 %>>
 
@@ -161,25 +176,25 @@
     \addtobeamertemplate{itemize/enumerate body end}
       {}{\kern-\dimexpr0.85\topsep+0.25\topskip\relax}% seems ok
     % put content into boxes
-    \setbox\@tempboxa=\hbox to 0.95\textwidth\bgroup
+    \linewidth\pb@blockswidth% use \linewidth to make it work with itemize
+    \setbox\@tempboxa=\hbox to \linewidth\bgroup
       \vbox\bgroup
         \raggedright
-        \begin{minipage}{0.95\textwidth}
-          % deal with optional title
-          \ifx\insertblocktitle\@empty
-          \else
-            {\usebeamerfont{#4}\usebeamercolor[fg]{#4}\insertblocktitle}\\[-0.3cm]
-            % NOTE TO MYSELF: better use this syntax with babel
-            \begin{tikzpicture}
-              \draw[draw=fg!20!bg, #1] (0,0) -- ++(\textwidth,0);
-            \end{tikzpicture}% avoid spurious space
-          \fi
-          \usebeamerfont{#5}\usebeamercolor[fg]{#5}% avoid spurious space
+        % deal with optional title
+        \ifx\insertblocktitle\@empty
+        \else
+          {\usebeamerfont{#4}\usebeamercolor[fg]{#4}\insertblocktitle}\\[-3mm]
+          % NOTE TO MYSELF: better use this syntax with babel
+          \edef\doit{\noexpand\path [\pb@blocksrule, #1]}
+          \begin{tikzpicture}
+            \doit (0,0) -- ++(\linewidth,0);
+          \end{tikzpicture}% avoid spurious space
+        \fi
+        \usebeamerfont{#5}\usebeamercolor[fg]{#5}% avoid spurious space
   }
   % ----------------------------------------
   % block end
   \defsetbeamertemplate{#3}{progressbar}{%
-        \end{minipage}% avoid spurious space
       \egroup% end vbox
     \egroup% end hbox
     % use boxes to typeset content
@@ -189,12 +204,11 @@
     \usebeamercolor{#5}% avoid spurious space
     \hbox to\textwidth{%
       \hfill
+      \edef\doit{\noexpand\node [\pb@blocksframe, #1]}
       \begin{tikzpicture}
-        \node[draw=fg!20!bg, fill=bg, rounded corners=2pt, #1]
-          at (0.5\@tempdima,0.5\@tempdimb)
-          {\box\@tempboxa};
+        \doit at (0.5\@tempdima,0.5\@tempdimb) {\box\@tempboxa};
       \end{tikzpicture}% avoid spurious space
-      \hfill}\vskip0.25\baselineskip}% put some space after block
+      \hfill}\vskip0.25\baselineskip}% put some space after each block
 }
 
 % #1 optional argument can be used to tweak default definition
