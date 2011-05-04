@@ -38,43 +38,34 @@
   \typeout{..................................................................}
 }
 
-\renewcommand{\appendix}[1][0void0]
-{
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  % This piece of code is supposed to introduce a bias in the
-  % number of slides
-  \makeatletter
-  \immediate\write\@auxout{\string\@writefile{nav}%
-    {\noexpand\headcommand{\noexpand\def\noexpand\insertintermediateframenumber{\the\c@framenumber}}}}
-  \renewcommand{\insertintermediateframenumber}{\inserttotalframenumber}
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  \def\tmparg{#1}
-  \def\tmpargref{0void0}
-  \ifx\tmparg\tmpargref\else
-  \begin{frame}[plain]
-    \vfill
-    \begin{center}
-      \usebeamerfont{title}\usebeamercolor{title}{\color{fg}\ #1\ }
-    \end{center}
-    \vfill
-  \end{frame}
+\let\@NX\noexpand
+\let\@EA\expandafter
+
+\renewcommand{\appendix}[1][]{%
+  \immediate\write\@auxout{%
+    \string\@writefile{nav}%
+    {\@NX\headcommand{\@NX\def\@NX\insertintermediateframenumber{%
+          \the\c@framenumber}}}}
+
+  % optionnal argument typeset centered on plain frame
+  \if @#1@\else
+    \begin{frame}[c,plain]
+      \centering\usebeamerfont{title}\usebeamercolor[fg]{title}#1\par
+    \end{frame}
   \fi
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  % We recompute the progressbar step and the current position
+  % recompute length of bar
+  \def\insertintermediateframenumber{\inserttotalframenumber}
+  \setbox\@tempboxa=\hbox{%
+    \usebeamerfont{section in head/foot}%
+    \usebeamercolor[fg]{section in head/foot}%
+    \inserttotalframenumber~/~\inserttotalframenumber}
+  \@tempdima=\wd\@tempboxa
 
-  \progressbar@numer=1
-  \progressbar@denom=\insertintermediateframenumber
-  \advance\progressbar@denom by -1
-  \progressbar@tmpresult=\progressbar@barlength
-  \multiply\progressbar@tmpresult by \progressbar@numer
-  \ifnum\progressbar@denom=0\else\divide\progressbar@tmpresult by \progressbar@denom\fi
-  \global\progressbar@stepbar=\progressbar@tmpresult
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-  \makeatother
+  \gsetlen\pb@frame \@tempdima
+  \gsetlen\pb@bar   {\paperwidth-\@tempdima-3\pb@margin}
+  \gsetlen\pb@step  {\pb@bar/(\inserttotalframenumber-2)}
 }
 
 
@@ -84,5 +75,5 @@
 
 
 %%% Local Variables:
-%%% TeX-master: "./demo.tex"
+%%% TeX-master: "./demo-slides.tex"
 %%% End:

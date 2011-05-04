@@ -163,7 +163,7 @@
         \else
           {\usebeamerfont{#4}\usebeamercolor[fg]{#4}\insertblocktitle}\\[-3mm]
           % NOTE TO MYSELF: better use this syntax with babel
-          \edef\doit{\noexpand\path [\pb@blocksrule, #1]}
+          \edef\doit{\noexpand\path [\pb@blocksrule, #1]}% avoid spurious space
           \begin{tikzpicture}
             \doit (0,0) -- ++(\linewidth,0);
           \end{tikzpicture}% avoid spurious space
@@ -182,7 +182,7 @@
     \usebeamercolor{#5}% avoid spurious space
     \hbox to\textwidth{%
       \hfill
-      \edef\doit{\noexpand\node [\pb@blocksframe, #1]}
+      \edef\doit{\noexpand\node [\pb@blocksframe, #1]}% avoid spurious space
       \begin{tikzpicture}
         \doit at (0.5\@tempdima,0.5\@tempdimb) {\box\@tempboxa};
       \end{tikzpicture}% avoid spurious space
@@ -368,5 +368,5 @@
 
 
 %%% Local Variables:
-%%% TeX-master: "./demo.tex"
+%%% TeX-master: "./demo-slides.tex"
 %%% End:

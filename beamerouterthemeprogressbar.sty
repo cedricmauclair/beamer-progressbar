@@ -64,8 +64,13 @@
 
 \pb@margin=2mm
 
-\newcommand\setdim[2]{#1\dimexpr#2\relax}
-\newcommand\gsetdim[2]{\global#1\dimexpr#2\relax}
+\newcommand\setlen[2]{#1\dimexpr#2\relax}
+\newcommand\gsetlen[2]{\global#1\dimexpr#2\relax}
+
+% this is used to fake the number of slides when there are appendices
+% at that time, the macro \insertintermediateframenumber is redefined to
+% be the last frame before the appendices
+\def\insertintermediateframenumber{\inserttotalframenumber}
 
 % progressbar
 \def\insertprogressbar{%
@@ -74,23 +79,23 @@
     \setbox\@tempboxa=\hbox{%
       \usebeamerfont{section in head/foot}%
       \usebeamercolor[fg]{section in head/foot}%
-      \inserttotalframenumber~/~\inserttotalframenumber}
+      \insertintermediateframenumber~/~\insertintermediateframenumber}
     \@tempdima=\wd\@tempboxa
 
-    \gsetdim\pb@frame \@tempdima
-    \gsetdim\pb@bar   {\paperwidth-\@tempdima-3\pb@margin}
-    \gsetdim\pb@step  {\pb@bar/(\inserttotalframenumber-2)}
+    \gsetlen\pb@frame \@tempdima
+    \gsetlen\pb@bar   {\paperwidth-\@tempdima-3\pb@margin}
+    \gsetlen\pb@step  {\pb@bar/(\insertintermediateframenumber-2)}
   % ... but don't put the progressbar on the first page (not frame!)
   \else
-    \setdim\@tempdima {\pb@step*(\insertframenumber-2)}
+    \setlen\@tempdima {\pb@step*(\insertframenumber-2)}
     \begin{tikzpicture}[thin, inner sep=0pt]
       \usebeamerfont{section in head/foot}
       \usebeamercolor{section in head/foot}
       \path [use as bounding box]
         (0,-1mm) rectangle ++(\paperwidth,0);
-      \node [anchor=west, text=fg]
-        at (\paperwidth-\pb@margin-\pb@frame,2.1mm)
-        {\insertframenumber~/~\inserttotalframenumber};
+      \node [anchor=east, text=fg]
+        at (\paperwidth-\pb@margin,2.1mm)
+        {\hfill\insertframenumber~/~\insertintermediateframenumber};
       \node [anchor=south east, text=fg]
         at (\paperwidth-2\pb@margin-\pb@frame-0.4mm,2.6mm)
         {\insertshorttitle};
@@ -234,6 +239,6 @@
 
 
 %%% Local Variables:
-%%% TeX-master: "./demo.tex"
+%%% TeX-master: "./demo-slides.tex"
 %%% End:
 

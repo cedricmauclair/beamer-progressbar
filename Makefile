@@ -3,6 +3,11 @@ HANDOUT := demo-handout
 
 all: slides handout
 
+release: all clean
+
+archive: all clean
+	git archive --format=tar --prefix=beamer-progressbar/ HEAD | bzip2 > ../beamer-progressbar.tbz
+
 clean:
 	@rm *aux *bbl *toc *snm *log *nav *blg *out
 
