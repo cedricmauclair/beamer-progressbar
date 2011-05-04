@@ -21,7 +21,7 @@
 
 \pgfkeys{/handlers/.append to/.code=
   \pgfkeysdef{\pgfkeyscurrentpath}{%
-    \expandafter\@temptokena\expandafter{#1,##1}%
+    \expandafter\@temptokena\expandafter{#1##1}%
     \expandafter\edef\csname\expandafter\@gobble\string#1\endcsname{%
       \the\@temptokena}}}
 
@@ -212,7 +212,8 @@
 }
 
 % #1 optional argument can be used to tweak default definition
-% should be treated as key/val list with pgfkeys
+% Also we can use \progressbaroptions{blocks/(width,rule,frame)}.
+% #1 % takes precedence.
 \defblocktemplate{default}% default block is special (see \defblocktemplate)
 \defblocktemplate{alerted}
 \defblocktemplate{example}
