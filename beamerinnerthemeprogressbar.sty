@@ -21,7 +21,7 @@
 
 \pgfkeys{/handlers/.append to/.code=
   \pgfkeysdef{\pgfkeyscurrentpath}{%
-    \expandafter\@temptokena\expandafter{#1##1}%
+    \expandafter\@temptokena\expandafter{#1,##1}%
     \expandafter\edef\csname\expandafter\@gobble\string#1\endcsname{%
       \the\@temptokena}}}
 
@@ -55,8 +55,8 @@
   frametitle/rulelength=0.7\linewidth,
   frametitle/rulewidth=0.5pt,
   blocks/width=0.95\textwidth,
-  blocks/rule={draw=fg!20!bg,},
-  blocks/frame={draw=fg!20!bg, fill=bg, rounded corners=2pt,}}
+  blocks/rule={draw=fg!20!bg},
+  blocks/frame={draw=fg!20!bg, fill=bg, rounded corners=2pt}}
 
 %>>
 
